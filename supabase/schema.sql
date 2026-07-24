@@ -4,6 +4,9 @@
 -- Run this in the Supabase SQL Editor before running the import script
 -- ============================================================
 
+-- Enable full-text / trigram search extension FIRST
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
 -- ─────────────────────────────────────────────
 -- 1. EXERCISES (public, read-only)
 -- ─────────────────────────────────────────────
@@ -30,9 +33,6 @@ CREATE INDEX IF NOT EXISTS idx_exercises_body_part  ON exercises (body_part);
 CREATE INDEX IF NOT EXISTS idx_exercises_equipment  ON exercises (equipment);
 CREATE INDEX IF NOT EXISTS idx_exercises_target     ON exercises (target);
 CREATE INDEX IF NOT EXISTS idx_exercises_name_trgm  ON exercises USING gin (name gin_trgm_ops);
-
--- Full-text search support (pg_trgm)
-CREATE EXTENSION IF NOT EXISTS pg_trgm;
 
 -- RLS: anyone can read exercises (no auth required)
 ALTER TABLE exercises ENABLE ROW LEVEL SECURITY;
@@ -109,10 +109,3 @@ CREATE POLICY "Users manage own folder exercises"
         AND wf.user_id = auth.uid()
     )
   );
-
--- ─────────────────────────────────────────────
--- 5. STORAGE BUCKETS
--- Create in Supabase Dashboard → Storage, or via API
--- bucket "exercise-images" → public
--- bucket "exercise-videos" → public
--- ─────────────────────────────────────────────
