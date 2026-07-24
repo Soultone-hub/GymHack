@@ -1,0 +1,6 @@
+{
+  "name": "GymHack",
+  "description": "Bibliothèque d'exercices physiques et créateur de séances mobile-first (PWA) conçue pour la salle de sport.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
