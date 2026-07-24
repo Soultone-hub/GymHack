@@ -150,6 +150,13 @@ export function useGymData() {
     if (error) throw error;
   }, []);
 
+  const resetPasswordForEmail = useCallback(async (email: string) => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin,
+    });
+    if (error) throw error;
+  }, []);
+
   const signOut = useCallback(async () => {
     await supabase.auth.signOut();
   }, []);
@@ -334,6 +341,7 @@ export function useGymData() {
     signInWithGoogle,
     signInWithEmail,
     signUpWithEmail,
+    resetPasswordForEmail,
     signOut,
     toggleFavorite,
     handleCreateFolder,

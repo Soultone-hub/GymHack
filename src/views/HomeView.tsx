@@ -2,7 +2,7 @@ import React from 'react';
 import { CATEGORIES } from '../data/categories';
 import { CategoryInfo, CategoryId, Exercise } from '../types';
 import { CategoryTile } from '../components/CategoryTile';
-import { Search, SlidersHorizontal, Zap } from 'lucide-react';
+import { Search, SlidersHorizontal, Dumbbell, LogOut } from 'lucide-react';
 
 interface HomeViewProps {
   exercises: Exercise[];
@@ -12,6 +12,8 @@ interface HomeViewProps {
   onOpenEquipmentSheet: () => void;
   selectedEquipment: string[];
   onSelectExercise: (exercise: Exercise) => void;
+  onSignOut?: () => void;
+  userEmail?: string | null;
 }
 
 export const HomeView: React.FC<HomeViewProps> = ({
@@ -22,6 +24,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
   onOpenEquipmentSheet,
   selectedEquipment,
   onSelectExercise,
+  onSignOut,
+  userEmail,
 }) => {
   // Count exercises per category
   const getCategoryCount = (categoryId: CategoryId) => {
@@ -30,7 +34,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
   return (
     <div className="pb-28 pt-4 px-4 max-w-lg mx-auto animate-fade-in">
-      {/* Brand Header */}
+      {/* Brand Header with Logout button */}
       <div className="flex items-center justify-between mb-4">
         <div>
           <div className="flex items-center gap-2">
@@ -39,14 +43,26 @@ export const HomeView: React.FC<HomeViewProps> = ({
               GymHack
             </h1>
           </div>
-          <p className="text-xs text-slate-500 mt-1">
-            Bibliothèque d'exercices • Sélection par zone
+          <p className="text-xs text-slate-500 mt-1 truncate max-w-[200px]">
+            {userEmail ? userEmail : "Bibliothèque d'exercices • Sélection par zone"}
           </p>
         </div>
 
-        <div className="flex items-center gap-1.5 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200 text-[10px] font-bold text-emerald-700">
-          <Zap className="w-3 h-3 fill-emerald-600 text-emerald-600" />
-          <span>1 324 EXERCICES</span>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200 text-[10px] font-bold text-emerald-700">
+            <Dumbbell className="w-3 h-3 text-emerald-600" />
+            <span>1 324 EXERCICES</span>
+          </div>
+
+          {onSignOut && (
+            <button
+              onClick={onSignOut}
+              className="w-8 h-8 rounded-full bg-slate-100 border border-slate-200 text-slate-500 hover:text-rose-600 hover:bg-rose-50 hover:border-rose-200 flex items-center justify-center transition-colors shadow-sm"
+              title="Déconnexion"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
+          )}
         </div>
       </div>
 

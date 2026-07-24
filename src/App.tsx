@@ -82,6 +82,7 @@ export default function App() {
         onSignInWithGoogle={gym.signInWithGoogle}
         onSignInWithEmail={gym.signInWithEmail}
         onSignUpWithEmail={gym.signUpWithEmail}
+        onResetPassword={gym.resetPasswordForEmail}
         isLoading={gym.isAuthLoading}
       />
     );
@@ -127,6 +128,8 @@ export default function App() {
               setSelectedExercise(ex);
               setCurrentView('detail');
             }}
+            onSignOut={gym.signOut}
+            userEmail={gym.user?.email}
           />
         )}
 
