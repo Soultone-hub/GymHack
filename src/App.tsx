@@ -80,6 +80,8 @@ export default function App() {
     return (
       <AuthScreen
         onSignInWithGoogle={gym.signInWithGoogle}
+        onSignInWithEmail={gym.signInWithEmail}
+        onSignUpWithEmail={gym.signUpWithEmail}
         isLoading={gym.isAuthLoading}
       />
     );

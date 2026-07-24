@@ -136,6 +136,20 @@ export function useGymData() {
     });
   }, []);
 
+  const signInWithEmail = useCallback(async (email: string, password: string) => {
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+  }, []);
+
+  const signUpWithEmail = useCallback(async (email: string, password: string) => {
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { emailRedirectTo: window.location.origin },
+    });
+    if (error) throw error;
+  }, []);
+
   const signOut = useCallback(async () => {
     await supabase.auth.signOut();
   }, []);
@@ -318,6 +332,8 @@ export function useGymData() {
     // Actions
     loadExercises,
     signInWithGoogle,
+    signInWithEmail,
+    signUpWithEmail,
     signOut,
     toggleFavorite,
     handleCreateFolder,
