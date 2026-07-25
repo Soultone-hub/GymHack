@@ -72,10 +72,6 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-slate-900 px-4 py-8 relative overflow-hidden">
-      {/* Background glow blobs */}
-      <div className="absolute top-[-120px] left-[-80px] w-[400px] h-[400px] rounded-full bg-blue-600/20 blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-[-80px] right-[-60px] w-[320px] h-[320px] rounded-full bg-indigo-500/20 blur-[80px] pointer-events-none" />
-
       {/* Main Container */}
       <div className="relative z-10 w-full max-w-sm">
 
