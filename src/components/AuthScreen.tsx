@@ -54,12 +54,12 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
         if (!password) return;
         await onSignUpWithEmail(email, password);
         setSuccessMsg(
-          'Un email de confirmation vous a été envoyé via Brevo ! Veuillez vérifier votre boîte de réception.',
+          'Un email de confirmation vous a été envoyé. Veuillez vérifier votre boîte de réception.',
         );
       } else if (mode === 'forgot') {
         await onResetPassword(email);
         setSuccessMsg(
-          'Un email de réinitialisation de mot de passe vous a été envoyé via Brevo !',
+          'Un email de réinitialisation de mot de passe vous a été envoyé. Veuillez vérifier votre boîte de réception.',
         );
       }
     } catch (err: unknown) {
@@ -280,11 +280,6 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
           </form>
         </div>
 
-        {/* Offline / PWA Footer info */}
-        <div className="flex items-center justify-center gap-1.5 mt-5 text-[11px] text-slate-500">
-          <Zap className="w-3.5 h-3.5 text-emerald-500" />
-          <span>Synchronisation automatique via Supabase & Brevo</span>
-        </div>
       </div>
     </div>
   );
