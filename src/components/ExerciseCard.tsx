@@ -2,6 +2,7 @@ import React from 'react';
 import { Exercise } from '../types';
 import { TARGET_FRENCH_MAP, EQUIPMENT_FRENCH_MAP } from '../data/categories';
 import { AnatomicalIcon } from './AnatomicalIcon';
+import { MarqueeText } from './MarqueeText';
 import { Heart, Plus } from 'lucide-react';
 
 interface ExerciseCardProps {
@@ -76,16 +77,21 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
 
       {/* Info footer */}
       <div className="p-3">
-        <h3 className="font-body font-bold text-sm text-black leading-snug line-clamp-2">
-          {exercise.name}
-        </h3>
-        <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
-          <span className="font-mono text-[10px] text-black bg-zinc-100 border border-black px-1.5 py-0.5 rounded-md">
-            {targetFr}
+        {/* Exercise name — marquee if too long */}
+        <MarqueeText
+          text={exercise.name}
+          className="font-body font-bold text-sm text-black leading-snug"
+          speed={40}
+        />
+        <div className="flex items-center gap-1.5 mt-1.5">
+          {/* Target — marquee if too long */}
+          <span className="font-mono text-[10px] text-black bg-zinc-100 border border-black px-1.5 py-0.5 rounded-md max-w-[45%]">
+            <MarqueeText text={targetFr} speed={30} />
           </span>
-          <span className="font-mono text-[10px] text-zinc-500">·</span>
-          <span className="font-mono text-[10px] text-zinc-600 truncate">
-            {equipmentFr}
+          <span className="font-mono text-[10px] text-zinc-500 shrink-0">·</span>
+          {/* Equipment — marquee if too long */}
+          <span className="font-mono text-[10px] text-zinc-600 min-w-0 flex-1">
+            <MarqueeText text={equipmentFr} speed={30} />
           </span>
         </div>
       </div>

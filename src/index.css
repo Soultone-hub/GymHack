@@ -72,3 +72,10 @@
     transform: translateY(0);
   }
 }
+
+/* ── Marquee scroll keyframe ─────────────────────── */
+@keyframes marquee-slide {
+  0%   { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
