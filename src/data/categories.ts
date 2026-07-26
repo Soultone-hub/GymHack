@@ -8,14 +8,12 @@ export const CATEGORIES: CategoryInfo[] = [
     name_fr: 'Dos',
     subtitle_fr: 'Lats, trapèzes, haut du dos',
     icon: 'back',
-    emoji: '🦴',   // os/colonne
   },
   {
     id: 'cardio',
     name_fr: 'Cardio',
     subtitle_fr: 'Endurance & système cardiaque',
     icon: 'pulse',
-    emoji: '❤️‍🔥', // coeur en feu
     isCardio: true,
   },
   {
@@ -23,56 +21,48 @@ export const CATEGORIES: CategoryInfo[] = [
     name_fr: 'Poitrine',
     subtitle_fr: 'Pectoraux & grand dentelé',
     icon: 'chest',
-    emoji: '🛡️',  // bouclier = pecs
   },
   {
     id: 'upper arms',
     name_fr: 'Bras',
     subtitle_fr: 'Biceps & triceps',
     icon: 'arms',
-    emoji: '💪',   // biceps fléchi
   },
   {
     id: 'shoulders',
     name_fr: 'Épaules',
-    subtitle_fr: 'Deltoides antérieur, latéral & postérieur',
+    subtitle_fr: 'Deltoïdes antérieur, latéral & postérieur',
     icon: 'shoulders',
-    emoji: '🚴',  // cycliste = épaules larges
   },
   {
     id: 'upper legs',
     name_fr: 'Haut des jambes',
     subtitle_fr: 'Quadriceps, ischio-jambiers, fessiers',
     icon: 'quads',
-    emoji: '🦵',   // jambe
   },
   {
     id: 'waist',
     name_fr: 'Taille & Abdos',
     subtitle_fr: 'Sangle abdominale & obliques',
     icon: 'abs',
-    emoji: '🎯',   // cible = core
   },
   {
     id: 'lower legs',
     name_fr: 'Bas des jambes',
     subtitle_fr: 'Mollets & soléaires',
     icon: 'calves',
-    emoji: '🦶',   // pied / bas de jambe
   },
   {
     id: 'lower arms',
     name_fr: 'Avant-bras',
-    subtitle_fr: 'Féchisseurs & extenseurs des poignets',
+    subtitle_fr: 'Fléchisseurs & extenseurs des poignets',
     icon: 'forearms',
-    emoji: '✊',   // poing fermé = grip
   },
   {
     id: 'neck',
     name_fr: 'Cou',
     subtitle_fr: 'Élévateur scapula & sterno-cléido-mastoïdien',
     icon: 'neck',
-    emoji: '🗿',   // statue = cou/tête
   },
 ];
 

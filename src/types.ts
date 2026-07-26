@@ -38,7 +38,6 @@ export interface CategoryInfo {
   name_fr: string;
   subtitle_fr: string;
   icon: string;
-  emoji?: string;
   isCardio?: boolean;
 }
 
