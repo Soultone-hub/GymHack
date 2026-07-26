@@ -2,7 +2,7 @@ import React from 'react';
 import { CategoryId, Exercise } from '../types';
 import { CATEGORIES, EQUIPMENT_FRENCH_MAP } from '../data/categories';
 import { ExerciseCard } from '../components/ExerciseCard';
-import { SlidersHorizontal, X, ArrowLeft, Search, Loader2 } from 'lucide-react';
+import { SlidersHorizontal, X, Loader2 } from 'lucide-react';
 
 interface ExerciseListViewProps {
   exercises: Exercise[];
@@ -28,7 +28,6 @@ export const ExerciseListView: React.FC<ExerciseListViewProps> = ({
   selectedCategory,
   selectedEquipment,
   searchQuery,
-  onSearchChange,
   onSelectCategory,
   onToggleEquipment,
   onOpenEquipmentSheet,
@@ -37,49 +36,29 @@ export const ExerciseListView: React.FC<ExerciseListViewProps> = ({
   onToggleFavorite,
   onAddToWorkout,
   onSelectExercise,
-  onBackToHome,
 }) => {
   const activeCategoryObj = CATEGORIES.find((c) => c.id === selectedCategory);
 
   return (
     <div className="pb-28 pt-4 px-4 max-w-lg mx-auto animate-fade-in">
-      {/* Top Nav Row */}
-      <div className="flex items-center justify-between mb-3">
-        <button
-          onClick={onBackToHome}
-          className="flex items-center gap-1.5 font-body font-bold text-xs text-black bg-white px-3 py-2 rounded-xl border-2 border-black nb-shadow-sm nb-press"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Zones</span>
-        </button>
 
-        <h2 className="font-display text-lg text-black tracking-wide">
+      {/* Title + Filters row — no back button */}
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="font-display text-xl text-black tracking-wide">
           {activeCategoryObj ? activeCategoryObj.name_fr : 'Tous les Exercices'}
         </h2>
 
         <button
           onClick={onOpenEquipmentSheet}
-          className={`flex items-center gap-1 px-3 py-2 rounded-xl font-body font-bold text-xs border-2 border-black nb-shadow-sm nb-press transition-colors ${
+          className={`flex items-center gap-1.5 px-3 py-2 rounded-xl font-body font-bold text-xs border-2 border-black nb-shadow-sm nb-press transition-colors ${
             selectedEquipment.length > 0
               ? 'bg-black text-white'
               : 'bg-white text-black hover:bg-zinc-100'
           }`}
         >
           <SlidersHorizontal className="w-3.5 h-3.5" />
-          <span>Filtres</span>
+          <span>Filtres{selectedEquipment.length > 0 ? ` (${selectedEquipment.length})` : ''}</span>
         </button>
-      </div>
-
-      {/* Search Input */}
-      <div className="relative mb-3">
-        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-black" />
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => onSearchChange(e.target.value)}
-          placeholder="Filtrer par nom…"
-          className="w-full bg-white border-2 border-black rounded-xl pl-9 pr-4 py-2.5 font-body text-xs text-black placeholder-zinc-400 focus:outline-none focus:bg-zinc-50 nb-shadow transition-all"
-        />
       </div>
 
       {/* Active Filter Pills */}

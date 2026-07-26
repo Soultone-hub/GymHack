@@ -10,6 +10,7 @@ import { EquipmentSheet } from './components/EquipmentSheet';
 import { AddToWorkoutModal } from './components/AddToWorkoutModal';
 import { BottomNav } from './components/BottomNav';
 import { Header } from './components/Header';
+import { SearchOverlay } from './components/SearchOverlay';
 import { AuthScreen } from './components/AuthScreen';
 import { useGymData } from './hooks/useGymData';
 import { fetchExercisesByIds } from './services/exerciseService';
@@ -23,6 +24,10 @@ export default function App() {
   const [selectedEquipment, setSelectedEquipment] = useState<string[]>([]);
   const [searchQuery, setSearchQuery]           = useState('');
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
+
+  // ── Search Overlay ───────────────────────────────────────────────────────────
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchOverlayQuery, setSearchOverlayQuery] = useState('');
 
   // ── Modals & Sheets ─────────────────────────────────────────────────────────
   const [isEquipmentSheetOpen, setIsEquipmentSheetOpen]   = useState(false);
@@ -41,21 +46,23 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategory, selectedEquipment, searchQuery, currentView]);
 
+  // ── Load exercises for search overlay ───────────────────────────────────────
+  useEffect(() => {
+    if (isSearchOpen && searchOverlayQuery.trim()) {
+      gym.loadExercises({ search: searchOverlayQuery });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchOverlayQuery, isSearchOpen]);
+
   // ── Load exercises for favorite exercises (needed in WorkoutsView / Runner) ─
-  // allExercises for the workout runner comes from gym.exercises (already loaded)
-  // For the runner we also need exercises not currently filtered, so we load them
-  // lazily when a folder is opened
   const [runnerExercises, setRunnerExercises] = useState<Exercise[]>([]);
 
   const handleStartSession = useCallback(async (folder: WorkoutFolder) => {
-    // Fetch all exercises referenced by this folder
     const ids = folder.exercises.map((e) => e.exerciseId);
-    // They may already be in gym.exercises — just filter
     const cached = ids
       .map((id) => gym.exercises.find((ex) => ex.id === id))
       .filter(Boolean) as Exercise[];
 
-    // Kick off a fallback load for any not-yet-loaded
     if (cached.length === ids.length) {
       setRunnerExercises(cached);
     } else {
@@ -70,8 +77,13 @@ export default function App() {
   // ── Auth guard ───────────────────────────────────────────────────────────────
   if (gym.isAuthLoading) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
-        <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-black border-2 border-black nb-shadow flex items-center justify-center">
+            <div className="w-5 h-5 border-3 border-white border-t-transparent rounded-full animate-spin" />
+          </div>
+          <span className="font-mono text-xs font-bold text-black uppercase tracking-wider">Chargement…</span>
+        </div>
       </div>
     );
   }
@@ -113,21 +125,37 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-white text-black flex flex-col justify-between">
-      {/* Global Header — visible on all main views */}
+      {/* Global Header */}
       {currentView !== 'active-workout' && (
         <Header
           userEmail={gym.user?.email}
           onSignOut={gym.signOut}
+          onSearchClick={() => setIsSearchOpen(true)}
         />
       )}
+
+      {/* Search Overlay */}
+      <SearchOverlay
+        isOpen={isSearchOpen}
+        searchQuery={searchOverlayQuery}
+        onSearchChange={setSearchOverlayQuery}
+        onClose={() => setIsSearchOpen(false)}
+        exercises={searchOverlayQuery.trim() ? gym.exercises : []}
+        isLoading={gym.isExercisesLoading}
+        onSelectExercise={(ex) => {
+          setSelectedExercise(ex);
+          setCurrentView('detail');
+          setIsSearchOpen(false);
+          setSearchOverlayQuery('');
+        }}
+      />
+
       <main className="flex-1 w-full">
 
         {/* HOME */}
         {currentView === 'home' && (
           <HomeView
             exercises={gym.exercises}
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
             onSelectCategory={handleSelectCategory}
             onOpenEquipmentSheet={() => setIsEquipmentSheetOpen(true)}
             selectedEquipment={selectedEquipment}
