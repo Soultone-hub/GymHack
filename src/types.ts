@@ -52,20 +52,6 @@ export interface WorkoutFolder {
   }[];
 }
 
-export interface LoggedSet {
-  setNumber: number;
-  reps: number;
-  weightKg: number;
-  completed: boolean;
-}
-
-export interface ActiveSession {
-  folderId: string;
-  folderName: string;
-  startTime: number;
-  currentExerciseIndex: number;
-  logs: Record<string, LoggedSet[]>; // exerciseId → array of completed sets
-}
 
 export type ViewMode =
   | 'home'
