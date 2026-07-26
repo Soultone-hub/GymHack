@@ -14,7 +14,6 @@ interface TempoRingProps {
 export const TempoRing: React.FC<TempoRingProps> = ({
   size = 'md',
   setsText,
-  color = 'blue',
   children,
   className = '',
 }) => {
@@ -25,21 +24,14 @@ export const TempoRing: React.FC<TempoRingProps> = ({
     xl: 'w-28 h-28 text-lg',
   };
 
-  const bgClasses = {
-    sulfur: 'bg-amber-50 text-amber-800 border-amber-200',
-    blue: 'bg-blue-50 text-blue-800 border-blue-200',
-    sage: 'bg-emerald-50 text-emerald-800 border-emerald-200',
-    coral: 'bg-rose-50 text-rose-800 border-rose-200',
-  }[color];
-
   return (
     <div
-      className={`relative rounded-2xl border flex items-center justify-center shrink-0 font-medium ${dimMap[size]} ${bgClasses} ${className}`}
+      className={`relative rounded-2xl border-2 border-black bg-zinc-50 text-black flex items-center justify-center shrink-0 font-body font-bold nb-shadow-sm ${dimMap[size]} ${className}`}
     >
       {children ? (
         children
       ) : (
-        <span className="font-semibold text-center leading-tight">
+        <span className="font-mono text-center leading-tight">
           {setsText || '4 × 10'}
         </span>
       )}

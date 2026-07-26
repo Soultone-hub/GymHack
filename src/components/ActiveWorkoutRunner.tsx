@@ -16,7 +16,6 @@ export const ActiveWorkoutRunner: React.FC<ActiveWorkoutRunnerProps> = ({
   onFinishWorkout,
   onClose,
 }) => {
-  // Map folder items to full exercise objects (matched by ID)
   const workoutExercises = folder.exercises
     .map((item) => allExercises.find((e) => e.id === item.exerciseId))
     .filter(Boolean) as Exercise[];
@@ -29,7 +28,6 @@ export const ActiveWorkoutRunner: React.FC<ActiveWorkoutRunnerProps> = ({
         { setNumber: 1, reps: 10, weightKg: 20, completed: false },
         { setNumber: 2, reps: 10, weightKg: 20, completed: false },
         { setNumber: 3, reps: 10, weightKg: 20, completed: false },
-        { setNumber: 4, reps: 10, weightKg: 20, completed: false },
       ];
     });
     return initial;
@@ -37,7 +35,7 @@ export const ActiveWorkoutRunner: React.FC<ActiveWorkoutRunnerProps> = ({
 
   if (workoutExercises.length === 0) {
     return (
-      <div className="p-8 text-center text-slate-500 bg-white rounded-2xl border border-slate-200 shadow-sm max-w-lg mx-auto my-8">
+      <div className="p-8 text-center border-2 border-black rounded-2xl bg-zinc-50 max-w-lg mx-auto my-8 font-body text-slate-500">
         Cette séance est vide. Ajoutez d'abord des exercices.
       </div>
     );
@@ -83,29 +81,29 @@ export const ActiveWorkoutRunner: React.FC<ActiveWorkoutRunnerProps> = ({
       <div className="flex items-center justify-between mb-4">
         <button
           onClick={onClose}
-          className="text-xs font-semibold text-slate-700 bg-white px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm hover:bg-slate-50"
+          className="text-xs font-body font-bold text-black bg-white px-3 py-2 rounded-xl border-2 border-black nb-shadow-sm nb-press"
         >
-          <ArrowLeft className="w-3.5 h-3.5 inline mr-1" /> Mettre en pause
+          <ArrowLeft className="w-3.5 h-3.5 inline mr-1" /> En pause
         </button>
-        <span className="font-bold text-base text-slate-900 tracking-tight">{folder.name}</span>
+        <span className="font-display text-base text-black tracking-tight">{folder.name}</span>
         <button
           onClick={onFinishWorkout}
-          className="px-3.5 py-1.5 rounded-xl bg-emerald-600 text-white font-semibold text-xs uppercase shadow-sm hover:bg-emerald-700"
+          className="px-4 py-2 rounded-xl border-2 border-black bg-black text-white font-body font-bold text-xs uppercase nb-shadow-sm nb-press hover:bg-zinc-800"
         >
           Terminer
         </button>
       </div>
 
-      {/* Exercise Navigation Tabs */}
+      {/* Exercise Tabs */}
       <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2 mb-4">
         {workoutExercises.map((ex, idx) => (
           <button
             key={ex.id}
             onClick={() => setCurrentIndex(idx)}
-            className={`shrink-0 px-3.5 py-2 rounded-xl text-xs font-semibold tracking-wide flex items-center gap-1.5 border transition-all ${
+            className={`shrink-0 px-3.5 py-2 rounded-xl font-body font-bold text-xs border-2 border-black transition-all nb-shadow-sm nb-press ${
               idx === currentIndex
-                ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
-                : 'bg-white text-slate-600 border-slate-200 shadow-sm hover:text-slate-900'
+                ? 'bg-black text-white'
+                : 'bg-white text-black hover:bg-zinc-55'
             }`}
           >
             {idx + 1}. {ex.name}
@@ -113,24 +111,23 @@ export const ActiveWorkoutRunner: React.FC<ActiveWorkoutRunnerProps> = ({
         ))}
       </div>
 
-      {/* Current Exercise + Sets Logger */}
-      <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm mb-4">
-        <div className="flex items-start justify-between mb-3">
+      {/* Logger Card */}
+      <div className="bg-white rounded-2xl p-5 border-2 border-black nb-shadow mb-4">
+        <div className="flex items-start justify-between mb-4 pb-3 border-b-2 border-black">
           <div className="flex-1 min-w-0">
-            <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider bg-blue-50 px-2 py-0.5 rounded-md">
-              Exercice {currentIndex + 1} / {workoutExercises.length}
+            <span className="font-mono text-[10px] font-bold text-white bg-black px-2 py-0.5 rounded-md">
+              Série {currentIndex + 1} / {workoutExercises.length}
             </span>
-            <h2 className="font-bold text-xl text-slate-900 tracking-tight mt-1 truncate">
+            <h2 className="font-display text-lg text-black mt-2 truncate">
               {currentEx.name}
             </h2>
-            <p className="text-xs text-slate-500 font-medium mt-0.5">
-              {targetFr} • {equipmentFr}
+            <p className="font-mono text-[10px] text-zinc-500 mt-0.5 uppercase">
+              {targetFr} · {equipmentFr}
             </p>
           </div>
 
-          {/* Mini GIF/Image preview */}
           {(currentEx.image_url || currentEx.gif_url) && (
-            <div className="w-14 h-14 rounded-xl overflow-hidden bg-slate-100 shrink-0 ml-3">
+            <div className="w-14 h-14 rounded-xl overflow-hidden bg-zinc-150 shrink-0 ml-3 border-2 border-black">
               <img
                 src={currentEx.gif_url ?? currentEx.image_url ?? ''}
                 alt={currentEx.name}
@@ -138,31 +135,25 @@ export const ActiveWorkoutRunner: React.FC<ActiveWorkoutRunnerProps> = ({
               />
             </div>
           )}
-
-          {!currentEx.image_url && !currentEx.gif_url && (
-            <div className="w-9 h-9 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600 shrink-0">
-              <Dumbbell className="w-5 h-5 text-blue-600" />
-            </div>
-          )}
         </div>
 
         {/* Sets Table */}
-        <div className="space-y-2 mt-4">
-          <div className="grid grid-cols-12 gap-2 text-[10px] font-bold uppercase text-slate-500 text-center px-1">
+        <div className="space-y-3">
+          <div className="grid grid-cols-12 gap-2 font-mono text-[10px] font-bold uppercase text-zinc-500 text-center px-1">
             <span className="col-span-2">Série</span>
             <span className="col-span-4">Poids (kg)</span>
             <span className="col-span-4">Répétitions</span>
-            <span className="col-span-2">✓</span>
+            <span className="col-span-2">Valide</span>
           </div>
 
           {currentLogs.map((set, idx) => (
             <div
               key={idx}
-              className={`grid grid-cols-12 gap-2 items-center p-2 rounded-xl border transition-colors ${
-                set.completed ? 'bg-emerald-50 border-emerald-200' : 'bg-slate-50 border-slate-200'
+              className={`grid grid-cols-12 gap-2 items-center p-2 rounded-xl border-2 border-black transition-colors ${
+                set.completed ? 'bg-zinc-100' : 'bg-white'
               }`}
             >
-              <span className="col-span-2 font-bold text-xs text-center text-slate-800">
+              <span className="col-span-2 font-mono font-bold text-xs text-center text-black">
                 #{set.setNumber}
               </span>
 
@@ -171,7 +162,7 @@ export const ActiveWorkoutRunner: React.FC<ActiveWorkoutRunnerProps> = ({
                   type="number"
                   value={set.weightKg}
                   onChange={(e) => updateSetData(idx, 'weightKg', parseFloat(e.target.value) || 0)}
-                  className="w-16 bg-white border border-slate-200 rounded-lg text-center font-bold text-sm text-slate-900 py-1 focus:outline-none focus:border-blue-500 shadow-sm"
+                  className="w-16 bg-white border-2 border-black rounded-lg text-center font-mono font-bold text-sm text-black py-1 focus:outline-none"
                 />
               </div>
 
@@ -180,20 +171,20 @@ export const ActiveWorkoutRunner: React.FC<ActiveWorkoutRunnerProps> = ({
                   type="number"
                   value={set.reps}
                   onChange={(e) => updateSetData(idx, 'reps', parseInt(e.target.value, 10) || 0)}
-                  className="w-16 bg-white border border-slate-200 rounded-lg text-center font-bold text-sm text-slate-900 py-1 focus:outline-none focus:border-blue-500 shadow-sm"
+                  className="w-16 bg-white border-2 border-black rounded-lg text-center font-mono font-bold text-sm text-black py-1 focus:outline-none"
                 />
               </div>
 
               <div className="col-span-2 flex justify-center">
                 <button
                   onClick={() => toggleSetComplete(idx)}
-                  className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all ${
+                  className={`w-8 h-8 rounded-lg border-2 border-black flex items-center justify-center nb-shadow-sm nb-press transition-colors ${
                     set.completed
-                      ? 'bg-emerald-600 text-white shadow-sm'
-                      : 'bg-white text-slate-400 border border-slate-200 hover:text-slate-700 shadow-sm'
+                      ? 'bg-black text-white'
+                      : 'bg-white text-zinc-400 hover:text-black'
                   }`}
                 >
-                  <Check className="w-5 h-5 stroke-[3]" />
+                  <Check className="w-4 h-4 stroke-[3]" />
                 </button>
               </div>
             </div>
@@ -201,26 +192,26 @@ export const ActiveWorkoutRunner: React.FC<ActiveWorkoutRunnerProps> = ({
 
           <button
             onClick={addSet}
-            className="w-full py-2.5 rounded-xl bg-slate-50 border border-dashed border-slate-300 text-blue-600 font-semibold text-xs uppercase flex items-center justify-center gap-1 hover:border-blue-500 hover:bg-slate-100 transition-colors"
+            className="w-full py-3 rounded-xl border-2 border-dashed border-black bg-white text-black font-body font-bold text-xs uppercase flex items-center justify-center gap-1.5 transition-all hover:bg-zinc-50 nb-press"
           >
             <Plus className="w-3.5 h-3.5" /> Ajouter une série
           </button>
         </div>
       </div>
 
-      {/* Prev / Next Navigation */}
+      {/* Navigation Buttons */}
       <div className="flex justify-between items-center gap-3">
         <button
           disabled={currentIndex === 0}
           onClick={() => setCurrentIndex((i) => i - 1)}
-          className="flex-1 py-3 rounded-xl bg-white border border-slate-200 text-slate-700 font-semibold text-xs uppercase disabled:opacity-40 shadow-sm"
+          className="flex-1 py-3.5 rounded-xl border-2 border-black bg-white text-black font-body font-bold text-xs uppercase disabled:opacity-30 nb-shadow-sm nb-press"
         >
           ← Précédent
         </button>
         <button
           disabled={currentIndex === workoutExercises.length - 1}
           onClick={() => setCurrentIndex((i) => i + 1)}
-          className="flex-1 py-3 rounded-xl bg-blue-600 text-white font-semibold text-xs uppercase disabled:opacity-40 shadow-sm hover:bg-blue-700"
+          className="flex-1 py-3.5 rounded-xl border-2 border-black bg-white text-black font-body font-bold text-xs uppercase disabled:opacity-30 nb-shadow-sm nb-press"
         >
           Suivant →
         </button>
