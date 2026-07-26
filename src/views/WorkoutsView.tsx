@@ -294,11 +294,11 @@ export const WorkoutsView: React.FC<WorkoutsViewProps> = ({
         </div>
       )}
 
-      {/* FAB — New Workout Button (bottom right circle) */}
+      {/* FAB — New Workout Button — just above footer */}
       {!activeFolder && (
         <button
           onClick={() => setIsCreating(true)}
-          className="fixed bottom-24 right-5 w-14 h-14 rounded-full bg-black text-white border-2 border-black nb-shadow-lg nb-press hover:bg-zinc-800 transition-colors flex items-center justify-center z-30"
+          className="fixed bottom-[76px] right-5 w-14 h-14 rounded-full bg-white text-black border-[3px] border-black nb-shadow-lg nb-press hover:bg-zinc-100 transition-colors flex items-center justify-center z-30"
           title="Nouvelle séance"
         >
           <Plus className="w-7 h-7" strokeWidth={2.5} />

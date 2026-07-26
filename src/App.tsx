@@ -128,8 +128,6 @@ export default function App() {
       {/* Global Header */}
       {currentView !== 'active-workout' && (
         <Header
-          userEmail={gym.user?.email}
-          onSignOut={gym.signOut}
           onSearchClick={() => setIsSearchOpen(true)}
         />
       )}
@@ -276,6 +274,7 @@ export default function App() {
           workoutsCount={gym.folders.length}
           hasActiveSession={!!activeRunningFolder}
           onLaunchActiveSession={() => setCurrentView('active-workout')}
+          onSignOut={gym.signOut}
         />
       )}
     </div>
