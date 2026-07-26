@@ -16,11 +16,8 @@ export const Header: React.FC<HeaderProps> = ({ onSearchClick }) => {
             <Dumbbell className="w-5 h-5 text-white" />
           </div>
           <div>
-            <span className="font-sketch text-3xl text-black leading-none block" style={{ lineHeight: '1' }}>
+            <span className="font-sketch text-3xl text-black leading-none block">
               GymHack
-            </span>
-            <span className="font-mono text-[9px] uppercase tracking-widest text-zinc-400 block mt-0.5">
-              Sketchnote · v2.0
             </span>
           </div>
         </div>
