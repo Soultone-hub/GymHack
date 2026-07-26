@@ -15,15 +15,41 @@ import { AuthScreen } from './components/AuthScreen';
 import { useGymData } from './hooks/useGymData';
 import { fetchExercisesByIds } from './services/exerciseService';
 
+/** Parse window.location.hash into a view + optional exercise id */
+function parseHash(): { view: ViewMode; exerciseId?: string } {
+  const hash = window.location.hash.replace('#', '');
+  if (hash.startsWith('detail/')) return { view: 'detail', exerciseId: hash.slice(7) };
+  const validViews: ViewMode[] = ['home', 'list', 'workouts', 'favorites'];
+  if (validViews.includes(hash as ViewMode)) return { view: hash as ViewMode };
+  return { view: 'home' };
+}
+
 export default function App() {
   const gym = useGymData();
 
-  // ── Navigation state ────────────────────────────────────────────────────────
-  const [currentView, setCurrentView]           = useState<ViewMode>('home');
-  const [selectedCategory, setSelectedCategory] = useState<CategoryId | null>(null);
+  // ── Navigation state (seeded from URL hash) ─────────────────────────────────
+  const [currentView, setCurrentView]             = useState<ViewMode>(() => parseHash().view);
+  const [selectedCategory, setSelectedCategory]   = useState<CategoryId | null>(null);
   const [selectedEquipment, setSelectedEquipment] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery]           = useState('');
-  const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
+  const [searchQuery, setSearchQuery]             = useState('');
+  const [selectedExercise, setSelectedExercise]   = useState<Exercise | null>(null);
+
+  // ── Sync hash → state on browser back/forward ───────────────────────────────
+  useEffect(() => {
+    const onHashChange = () => {
+      const { view } = parseHash();
+      setCurrentView(view);
+    };
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  }, []);
+
+  // ── Sync state → hash whenever view changes ─────────────────────────────────
+  const navigate = useCallback((view: ViewMode, exerciseId?: string) => {
+    setCurrentView(view);
+    const hash = view === 'detail' && exerciseId ? `detail/${exerciseId}` : view;
+    window.history.replaceState(null, '', `#${hash}`);
+  }, []);
 
   // ── Search Overlay ───────────────────────────────────────────────────────────
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -103,7 +129,7 @@ export default function App() {
   // ── Handlers ─────────────────────────────────────────────────────────────────
   const handleSelectCategory = (categoryId: CategoryId) => {
     setSelectedCategory(categoryId);
-    setCurrentView('list');
+    navigate('list');
   };
 
   const handleToggleEquipment = (eq: string) => {
@@ -121,6 +147,11 @@ export default function App() {
     setSelectedCategory(null);
     setSelectedEquipment([]);
     setSearchQuery('');
+  };
+
+  const goToDetail = (ex: Exercise) => {
+    setSelectedExercise(ex);
+    navigate('detail', ex.id);
   };
 
   return (
@@ -141,8 +172,7 @@ export default function App() {
         exercises={searchOverlayQuery.trim() ? gym.exercises : []}
         isLoading={gym.isExercisesLoading}
         onSelectExercise={(ex) => {
-          setSelectedExercise(ex);
-          setCurrentView('detail');
+          goToDetail(ex);
           setIsSearchOpen(false);
           setSearchOverlayQuery('');
         }}
@@ -157,10 +187,7 @@ export default function App() {
             onSelectCategory={handleSelectCategory}
             onOpenEquipmentSheet={() => setIsEquipmentSheetOpen(true)}
             selectedEquipment={selectedEquipment}
-            onSelectExercise={(ex) => {
-              setSelectedExercise(ex);
-              setCurrentView('detail');
-            }}
+            onSelectExercise={goToDetail}
           />
         )}
 
@@ -180,11 +207,8 @@ export default function App() {
             favorites={gym.favorites}
             onToggleFavorite={handleToggleFavorite}
             onAddToWorkout={(e, ex) => { e.stopPropagation(); setExerciseToAdd(ex); }}
-            onSelectExercise={(ex) => {
-              setSelectedExercise(ex);
-              setCurrentView('detail');
-            }}
-            onBackToHome={() => setCurrentView('home')}
+            onSelectExercise={goToDetail}
+            onBackToHome={() => navigate('home')}
           />
         )}
 
@@ -193,7 +217,7 @@ export default function App() {
           <ExerciseDetailView
             exercise={selectedExercise}
             isFavorite={gym.favorites.includes(selectedExercise.id)}
-            onBack={() => setCurrentView('list')}
+            onBack={() => navigate('list')}
             onToggleFavorite={(ex) => gym.toggleFavorite(ex)}
             onAddToWorkout={(ex) => setExerciseToAdd(ex)}
           />
@@ -210,10 +234,7 @@ export default function App() {
             onRemoveExerciseFromFolder={gym.handleRemoveExerciseFromFolder}
             onReorderExercisesInFolder={gym.handleReorderExercisesInFolder}
             onStartSession={handleStartSession}
-            onSelectExercise={(ex) => {
-              setSelectedExercise(ex);
-              setCurrentView('detail');
-            }}
+            onSelectExercise={goToDetail}
           />
         )}
 
@@ -221,10 +242,7 @@ export default function App() {
         {currentView === 'favorites' && (
           <FavoritesView
             favoriteExercises={gym.favoriteExercises}
-            onSelectExercise={(ex) => {
-              setSelectedExercise(ex);
-              setCurrentView('detail');
-            }}
+            onSelectExercise={goToDetail}
             onRemoveFavorite={(e, ex) => handleToggleFavorite(e, ex)}
             onAddToWorkout={(e, ex) => { e.stopPropagation(); setExerciseToAdd(ex); }}
           />
@@ -237,9 +255,9 @@ export default function App() {
             allExercises={runnerExercises}
             onFinishWorkout={() => {
               setActiveRunningFolder(null);
-              setCurrentView('workouts');
+              navigate('workouts');
             }}
-            onClose={() => setCurrentView('workouts')}
+            onClose={() => navigate('workouts')}
           />
         )}
       </main>
@@ -267,13 +285,13 @@ export default function App() {
         <BottomNav
           currentView={currentView}
           onNavigate={(view) => {
-            setCurrentView(view);
+            navigate(view);
             if (view === 'home') setSelectedCategory(null);
           }}
           favoritesCount={gym.favorites.length}
           workoutsCount={gym.folders.length}
           hasActiveSession={!!activeRunningFolder}
-          onLaunchActiveSession={() => setCurrentView('active-workout')}
+          onLaunchActiveSession={() => navigate('active-workout')}
           onSignOut={gym.signOut}
         />
       )}

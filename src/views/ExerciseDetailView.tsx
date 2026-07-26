@@ -3,6 +3,7 @@ import { Exercise } from '../types';
 import { TARGET_FRENCH_MAP, EQUIPMENT_FRENCH_MAP, CATEGORIES } from '../data/categories';
 import { ExerciseVisual } from '../components/ExerciseVisual';
 import { TempoGuideWidget } from '../components/TempoGuideWidget';
+import { MarqueeText } from '../components/MarqueeText';
 import { ArrowLeft, Heart, Plus, ShieldCheck, Tag } from 'lucide-react';
 
 interface ExerciseDetailViewProps {
@@ -69,33 +70,39 @@ export const ExerciseDetailView: React.FC<ExerciseDetailViewProps> = ({
       {/* Three Metadata Pills */}
       <div className="grid grid-cols-3 gap-3 mb-6">
         {/* Pill 1: Category */}
-        <div className="p-3 rounded-xl border-2 border-black bg-white text-black nb-shadow-sm flex flex-col justify-between">
+        <div className="p-3 rounded-xl border-2 border-black bg-white text-black nb-shadow-sm flex flex-col gap-1">
           <span className="font-mono text-[9px] uppercase font-bold text-zinc-500 tracking-wider">
             Catégorie
           </span>
-          <span className="font-body font-bold text-[11px] uppercase mt-1 leading-tight line-clamp-1">
-            {categoryObj ? categoryObj.name_fr : exercise.category}
-          </span>
+          <MarqueeText
+            text={(categoryObj ? categoryObj.name_fr : exercise.category).toUpperCase()}
+            className="font-body font-bold text-[11px]"
+            speed={25}
+          />
         </div>
 
         {/* Pill 2: Equipment */}
-        <div className="p-3 rounded-xl border-2 border-black bg-white text-black nb-shadow-sm flex flex-col justify-between">
+        <div className="p-3 rounded-xl border-2 border-black bg-white text-black nb-shadow-sm flex flex-col gap-1">
           <span className="font-mono text-[9px] uppercase font-bold text-zinc-500 tracking-wider">
             Équipement
           </span>
-          <span className="font-body font-bold text-[11px] uppercase mt-1 leading-tight line-clamp-1">
-            {equipmentFr}
-          </span>
+          <MarqueeText
+            text={equipmentFr.toUpperCase()}
+            className="font-body font-bold text-[11px]"
+            speed={25}
+          />
         </div>
 
         {/* Pill 3: Target Muscle */}
-        <div className="p-3 rounded-xl border-2 border-black bg-black text-white nb-shadow-sm flex flex-col justify-between">
+        <div className="p-3 rounded-xl border-2 border-black bg-black text-white nb-shadow-sm flex flex-col gap-1">
           <span className="font-mono text-[9px] uppercase font-bold text-zinc-400 tracking-wider">
             Cible
           </span>
-          <span className="font-body font-bold text-[11px] uppercase mt-1 leading-tight line-clamp-1">
-            {targetFr}
-          </span>
+          <MarqueeText
+            text={targetFr.toUpperCase()}
+            className="font-body font-bold text-[11px]"
+            speed={25}
+          />
         </div>
       </div>
 
