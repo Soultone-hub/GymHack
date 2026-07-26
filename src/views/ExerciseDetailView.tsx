@@ -144,11 +144,9 @@ export const ExerciseDetailView: React.FC<ExerciseDetailViewProps> = ({
         <div className="max-w-lg mx-auto flex items-center gap-3">
           <button
             onClick={() => onToggleFavorite(exercise)}
-            className={`w-14 h-14 rounded-2xl border-2 border-black flex items-center justify-center nb-shadow nb-press transition-all ${
-              isFavorite ? 'bg-black text-white' : 'bg-white text-black hover:bg-zinc-100'
-            }`}
+            className="w-14 h-14 rounded-2xl border-[3px] border-black bg-white text-black flex items-center justify-center nb-shadow nb-press hover:bg-zinc-50 transition-all"
           >
-            <Heart className={`w-6 h-6 ${isFavorite ? 'fill-white' : ''}`} />
+            <Heart className={`w-6 h-6 ${isFavorite ? 'fill-black' : ''}`} />
           </button>
 
           <button

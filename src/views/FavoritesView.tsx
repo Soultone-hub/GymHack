@@ -87,10 +87,10 @@ export const FavoritesView: React.FC<FavoritesViewProps> = ({
                   </button>
                   <button
                     onClick={(e) => onRemoveFavorite(e, ex)}
-                    className="w-8 h-8 rounded-xl border-2 border-black bg-black text-white flex items-center justify-center nb-shadow-sm nb-press hover:bg-zinc-800 transition-colors"
+                    className="w-8 h-8 rounded-xl border-[3px] border-black bg-white text-black flex items-center justify-center nb-shadow nb-press hover:bg-zinc-50 transition-colors"
                     title="Retirer des favoris"
                   >
-                    <Heart className="w-4 h-4 fill-white" />
+                    <Heart className="w-4 h-4 fill-black" />
                   </button>
                 </div>
               </div>
