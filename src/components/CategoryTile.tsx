@@ -23,8 +23,15 @@ export const CategoryTile: React.FC<CategoryTileProps> = ({
     >
       {/* Header: Icon + Arrow */}
       <div className="flex items-center justify-between w-full">
-        <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-black text-white border-2 border-black nb-shadow-sm">
-          <AnatomicalIcon icon={category.icon} isCardio={isCardio} className="w-5 h-5" />
+        {/* Emoji ou SVG */}
+        <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-black border-2 border-black nb-shadow-sm shrink-0">
+          {category.emoji ? (
+            <span className="text-xl leading-none select-none" role="img" aria-label={category.name_fr}>
+              {category.emoji}
+            </span>
+          ) : (
+            <AnatomicalIcon icon={category.icon} isCardio={isCardio} className="w-5 h-5 text-white" />
+          )}
         </div>
         <ArrowRight className="w-4 h-4 text-black" />
       </div>
@@ -48,7 +55,7 @@ export const CategoryTile: React.FC<CategoryTileProps> = ({
 
       {/* Cardio Badge */}
       {isCardio && (
-        <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-md text-[9px] font-mono font-bold uppercase bg-black text-white border border-black">
+        <div className="absolute top-2 right-8 px-1.5 py-0.5 rounded-md text-[9px] font-mono font-bold uppercase bg-black text-white border border-black">
           Cardio
         </div>
       )}

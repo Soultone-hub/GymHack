@@ -4,7 +4,6 @@ import { WorkoutFolder } from '../types';
 // ─── Types matching the DB schema ────────────────────────────────────────────
 interface DBFolder {
   id: string;
-  user_id: string;
   name: string;
   created_at: string;
   folder_exercises: DBFolderExercise[];
@@ -36,12 +35,13 @@ function dbFolderToApp(db: DBFolder): WorkoutFolder {
   };
 }
 
-// ─── Fetch all folders for a user ────────────────────────────────────────────
-export async function fetchFolders(userId: string): Promise<WorkoutFolder[]> {
+// ─── Fetch all folders for the authenticated user ─────────────────────────────
+// user_id filter removed — RLS on workout_folders must enforce
+// `auth.uid() = user_id` so ownership is verified server-side only.
+export async function fetchFolders(): Promise<WorkoutFolder[]> {
   const { data, error } = await supabase
     .from('workout_folders')
     .select('*, folder_exercises(*)')
-    .eq('user_id', userId)
     .order('created_at', { ascending: false });
 
   if (error) throw new Error(`fetchFolders: ${error.message}`);
@@ -49,10 +49,12 @@ export async function fetchFolders(userId: string): Promise<WorkoutFolder[]> {
 }
 
 // ─── Create a new folder ──────────────────────────────────────────────────────
-export async function createFolder(userId: string, name: string): Promise<WorkoutFolder> {
+// user_id omitted from insert — RLS column DEFAULT sets it to auth.uid()
+// so the client cannot claim ownership of another user's data.
+export async function createFolder(name: string): Promise<WorkoutFolder> {
   const { data, error } = await supabase
     .from('workout_folders')
-    .insert({ user_id: userId, name })
+    .insert({ name })
     .select('*, folder_exercises(*)')
     .single();
 
@@ -110,10 +112,9 @@ export async function removeExerciseFromFolder(
 }
 
 // ─── Reorder exercises in a folder ────────────────────────────────────────────
-// Sends one update per row (position change)
 export async function reorderExercisesInFolder(
   folderId: string,
-  exerciseIds: string[], // ordered list of exercise IDs
+  exerciseIds: string[],
 ): Promise<void> {
   const updates = exerciseIds.map((exerciseId, position) =>
     supabase

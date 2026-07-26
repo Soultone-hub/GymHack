@@ -60,7 +60,7 @@ export function useGymData() {
         user: session?.user ?? null,
         isAuthLoading: false,
       }));
-      if (session?.user) loadUserData(session.user.id);
+      if (session?.user) loadUserData();
     });
 
     // Subscribe to auth changes
@@ -73,7 +73,7 @@ export function useGymData() {
           isAuthLoading: false,
         }));
         if (session?.user) {
-          loadUserData(session.user.id);
+          loadUserData();
         } else {
           // Signed out — clear user data
           setState((s) => ({
@@ -90,12 +90,12 @@ export function useGymData() {
   }, []);
 
   // ── Load user-specific data ───────────────────────────────────────────────
-  async function loadUserData(userId: string) {
+  async function loadUserData() {
     setState((s) => ({ ...s, isFoldersLoading: true }));
     try {
       const [favIds, folders] = await Promise.all([
-        fetchFavorites(userId),
-        fetchFolders(userId),
+        fetchFavorites(),
+        fetchFolders(),
       ]);
 
       // Fetch full exercise objects for favorites
@@ -185,9 +185,9 @@ export function useGymData() {
 
       try {
         if (isFav) {
-          await removeFavorite(user.id, exercise.id);
+          await removeFavorite(exercise.id);
         } else {
-          await addFavorite(user.id, exercise.id);
+          await addFavorite(exercise.id);
         }
       } catch (err) {
         // Rollback on error
@@ -207,7 +207,7 @@ export function useGymData() {
     async (name: string) => {
       if (!state.user) return;
       try {
-        const folder = await createFolder(state.user.id, name);
+      const folder = await createFolder(name);
         setState((s) => ({ ...s, folders: [folder, ...s.folders] }));
       } catch (err) {
         console.error('handleCreateFolder error:', err);
@@ -273,7 +273,7 @@ export function useGymData() {
     async (folderName: string, exerciseId: string) => {
       if (!state.user) return;
       try {
-        const folder = await createFolder(state.user.id, folderName);
+        const folder = await createFolder(folderName);
         await addExerciseToFolder(folder.id, exerciseId, 0);
         const updatedFolder = { ...folder, exercises: [{ exerciseId }] };
         setState((s) => ({ ...s, folders: [updatedFolder, ...s.folders] }));

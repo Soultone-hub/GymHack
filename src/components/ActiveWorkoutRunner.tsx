@@ -16,9 +16,10 @@ export const ActiveWorkoutRunner: React.FC<ActiveWorkoutRunnerProps> = ({
   onFinishWorkout,
   onClose,
 }) => {
-  const workoutExercises = folder.exercises
-    .map((item) => allExercises.find((e) => e.id === item.exerciseId))
-    .filter(Boolean) as Exercise[];
+  const workoutExercises = folder.exercises.flatMap((item) => {
+    const ex = allExercises.find((e) => e.id === item.exerciseId);
+    return ex ? [ex] : [];
+  });
 
   const [currentIndex, setCurrentIndex] = useState(0);
 

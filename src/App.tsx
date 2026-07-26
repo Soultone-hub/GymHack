@@ -106,9 +106,10 @@ export default function App() {
 
   const handleStartSession = useCallback(async (folder: WorkoutFolder) => {
     const ids = folder.exercises.map((e) => e.exerciseId);
-    const cached = ids
-      .map((id) => gym.exercises.find((ex) => ex.id === id))
-      .filter(Boolean) as Exercise[];
+    const cached = ids.flatMap((id) => {
+      const ex = gym.exercises.find((e) => e.id === id);
+      return ex ? [ex] : [];
+    });
 
     if (cached.length === ids.length) {
       setRunnerExercises(cached);
