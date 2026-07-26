@@ -17,23 +17,27 @@ export const FavoritesView: React.FC<FavoritesViewProps> = ({
   onAddToWorkout,
 }) => {
   return (
-    <div className="pb-28 pt-4 px-4 max-w-lg mx-auto animate-fade-in">
+    <div className="pb-28 pt-5 px-4 max-w-lg mx-auto animate-fade-in">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-5">
         <div>
-          <h1 className="text-xl font-bold text-slate-900 tracking-tight">Mes Favoris</h1>
-          <p className="text-xs text-slate-500 mt-0.5">Accès direct en 3 secondes</p>
+          <h1 className="font-display text-2xl text-black leading-tight">Mes Favoris</h1>
+          <p className="font-mono text-[11px] text-zinc-500 uppercase tracking-wider mt-1">
+            Accès rapide à vos exercices
+          </p>
         </div>
-        <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+        <span className="font-mono text-[10px] font-bold text-white bg-black border-2 border-black px-2.5 py-1 rounded-xl nb-shadow-sm">
           {favoriteExercises.length} FAVORIS
         </span>
       </div>
 
       {favoriteExercises.length === 0 ? (
-        <div className="p-8 text-center text-sm text-slate-500 bg-white rounded-2xl border border-slate-200 my-4 shadow-sm">
-          <Heart className="w-10 h-10 text-emerald-600 mx-auto mb-2 opacity-80" />
-          <p className="font-bold text-base text-slate-900 mb-1">Aucun favori pour le moment</p>
-          <p className="text-xs">Touchez l'icône de cœur sur n'importe quel exercice pour l'épingler ici.</p>
+        <div className="p-8 text-center border-2 border-black border-dashed rounded-2xl bg-zinc-50 my-4">
+          <Heart className="w-10 h-10 text-black mx-auto mb-3 opacity-60" />
+          <p className="font-display text-xl text-black mb-1">Aucun favori</p>
+          <p className="font-body text-xs text-zinc-500">
+            Touchez l'icône de cœur sur n'importe quel exercice pour l'épingler ici.
+          </p>
         </div>
       ) : (
         <div className="space-y-2">
@@ -45,11 +49,11 @@ export const FavoritesView: React.FC<FavoritesViewProps> = ({
               <div
                 key={ex.id}
                 onClick={() => onSelectExercise(ex)}
-                className="p-3.5 bg-white rounded-2xl border border-slate-200 hover:border-emerald-300 cursor-pointer transition-all flex items-center justify-between gap-3 group shadow-sm hover:shadow-md"
+                className="p-3.5 bg-white rounded-2xl border-2 border-black nb-shadow nb-press cursor-pointer flex items-center justify-between gap-3 hover:bg-zinc-50 transition-colors"
               >
                 {/* Thumbnail */}
                 {(ex.image_url || ex.gif_url) && (
-                  <div className="w-12 h-12 rounded-xl overflow-hidden bg-slate-100 shrink-0">
+                  <div className="w-12 h-12 rounded-xl overflow-hidden bg-zinc-100 shrink-0 border-2 border-black">
                     <img
                       src={ex.gif_url ?? ex.image_url ?? ''}
                       alt={ex.name}
@@ -60,29 +64,33 @@ export const FavoritesView: React.FC<FavoritesViewProps> = ({
                 )}
 
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-bold text-sm text-slate-900 truncate group-hover:text-emerald-600">
+                  <h3 className="font-body font-bold text-sm text-black truncate">
                     {ex.name}
                   </h3>
-                  <p className="text-xs text-slate-500 truncate mt-0.5">
-                    {targetFr} <span className="text-blue-500">•</span> {equipmentFr}
-                  </p>
+                  <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+                    <span className="font-mono text-[10px] text-black bg-zinc-100 border border-black px-1.5 py-0.5 rounded-md">
+                      {targetFr}
+                    </span>
+                    <span className="font-mono text-[10px] text-zinc-500">·</span>
+                    <span className="font-mono text-[10px] text-zinc-500 truncate">{equipmentFr}</span>
+                  </div>
                 </div>
 
                 {/* Actions */}
                 <div className="flex items-center gap-1.5 shrink-0">
                   <button
                     onClick={(e) => onAddToWorkout(e, ex)}
-                    className="w-9 h-9 rounded-full bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white flex items-center justify-center transition-colors"
+                    className="w-8 h-8 rounded-xl border-2 border-black bg-white text-black flex items-center justify-center nb-shadow-sm nb-press hover:bg-zinc-100 transition-colors"
                     title="Ajouter à une séance"
                   >
                     <Plus className="w-4 h-4" />
                   </button>
                   <button
                     onClick={(e) => onRemoveFavorite(e, ex)}
-                    className="w-9 h-9 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center hover:bg-rose-50 hover:text-rose-600 transition-colors"
+                    className="w-8 h-8 rounded-xl border-2 border-black bg-black text-white flex items-center justify-center nb-shadow-sm nb-press hover:bg-zinc-800 transition-colors"
                     title="Retirer des favoris"
                   >
-                    <Heart className="w-4 h-4 fill-emerald-600" />
+                    <Heart className="w-4 h-4 fill-white" />
                   </button>
                 </div>
               </div>

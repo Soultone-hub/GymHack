@@ -26,10 +26,10 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
   return (
     <div
       onClick={() => onSelect(exercise)}
-      className="group relative bg-white rounded-2xl border border-slate-200 hover:border-blue-500/80 shadow-sm hover:shadow-md active:scale-[0.98] transition-all flex flex-col cursor-pointer overflow-hidden"
+      className="group relative bg-white rounded-2xl border-2 border-black nb-shadow nb-press cursor-pointer flex flex-col overflow-hidden hover:bg-zinc-50 transition-colors"
     >
       {/* GIF / Image Thumbnail */}
-      <div className="relative w-full aspect-square bg-slate-100 overflow-hidden">
+      <div className="relative w-full aspect-square bg-zinc-100 overflow-hidden border-b-2 border-black">
         {exercise.gif_url ? (
           <img
             src={exercise.gif_url}
@@ -45,8 +45,7 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
             loading="lazy"
           />
         ) : (
-          // Fallback icon when no media
-          <div className={`w-full h-full flex items-center justify-center ${isCardio ? 'bg-rose-50' : 'bg-blue-50'}`}>
+          <div className="w-full h-full flex items-center justify-center bg-zinc-200">
             <AnatomicalIcon
               icon={isCardio ? 'pulse' : exercise.category.replace(' ', '')}
               isCardio={isCardio}
@@ -55,14 +54,12 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
           </div>
         )}
 
-        {/* Action buttons overlay */}
+        {/* Favorite & Add buttons */}
         <div className="absolute top-2 right-2 flex flex-col gap-1.5">
           <button
             onClick={(e) => onToggleFavorite(e, exercise)}
-            className={`w-7 h-7 rounded-full flex items-center justify-center shadow-sm transition-colors ${
-              isFavorite
-                ? 'bg-emerald-500 text-white'
-                : 'bg-white/90 backdrop-blur-sm text-slate-400 hover:text-slate-600'
+            className={`w-7 h-7 rounded-full border-2 border-black flex items-center justify-center nb-shadow-sm nb-press transition-colors ${
+              isFavorite ? 'bg-black text-white' : 'bg-white text-black hover:bg-zinc-100'
             }`}
             title={isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}
           >
@@ -71,7 +68,7 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
 
           <button
             onClick={(e) => onAddToWorkout(e, exercise)}
-            className="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-sm hover:bg-blue-700 transition-colors"
+            className="w-7 h-7 rounded-full border-2 border-black bg-black text-white flex items-center justify-center nb-shadow-sm nb-press hover:bg-zinc-800 transition-colors"
             title="Ajouter à une séance"
           >
             <Plus className="w-3.5 h-3.5" />
@@ -81,12 +78,18 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
 
       {/* Info footer */}
       <div className="p-3">
-        <h3 className="font-semibold text-sm text-slate-900 leading-snug line-clamp-2 group-hover:text-blue-600 transition-colors">
+        <h3 className="font-body font-bold text-sm text-black leading-snug line-clamp-2">
           {exercise.name}
         </h3>
-        <p className="text-[11px] text-slate-500 mt-1 line-clamp-1">
-          {targetFr} <span className="text-blue-400">•</span> {equipmentFr}
-        </p>
+        <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
+          <span className="font-mono text-[10px] text-black bg-zinc-100 border border-black px-1.5 py-0.5 rounded-md">
+            {targetFr}
+          </span>
+          <span className="font-mono text-[10px] text-zinc-500">·</span>
+          <span className="font-mono text-[10px] text-zinc-600 truncate">
+            {equipmentFr}
+          </span>
+        </div>
       </div>
     </div>
   );

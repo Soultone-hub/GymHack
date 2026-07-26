@@ -1,7 +1,7 @@
 import React from 'react';
 import { CategoryInfo } from '../types';
 import { AnatomicalIcon } from './AnatomicalIcon';
-import { ChevronRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 interface CategoryTileProps {
   category: CategoryInfo;
@@ -19,48 +19,36 @@ export const CategoryTile: React.FC<CategoryTileProps> = ({
   return (
     <button
       onClick={onClick}
-      className={`relative w-full h-28 p-3.5 rounded-2xl flex flex-col justify-between text-left transition-all duration-200 active:scale-[0.97] border shadow-sm ${
-        isCardio
-          ? 'bg-rose-50/70 border-rose-200 hover:border-rose-400'
-          : 'bg-white border-slate-200 hover:border-blue-400 hover:shadow-md'
-      }`}
+      className="relative w-full h-28 p-3.5 rounded-2xl flex flex-col justify-between text-left border-2 border-black bg-white nb-shadow nb-press hover:bg-zinc-50 transition-colors"
     >
       {/* Header: Icon + Arrow */}
       <div className="flex items-center justify-between w-full">
-        <div
-          className={`w-9 h-9 rounded-xl flex items-center justify-center ${
-            isCardio ? 'bg-rose-100 text-rose-600' : 'bg-blue-50 text-blue-600 border border-blue-100'
-          }`}
-        >
+        <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-black text-white border-2 border-black nb-shadow-sm">
           <AnatomicalIcon icon={category.icon} isCardio={isCardio} className="w-5 h-5" />
         </div>
-        <ChevronRight
-          className={`w-4 h-4 ${
-            isCardio ? 'text-rose-400' : 'text-slate-400'
-          }`}
-        />
+        <ArrowRight className="w-4 h-4 text-black" />
       </div>
 
       {/* Title & Count */}
       <div>
         <div className="flex items-baseline justify-between gap-1">
-          <span className="font-bold text-base text-slate-900 leading-none">
+          <span className="font-body font-bold text-sm text-black leading-none">
             {category.name_fr}
           </span>
           {exerciseCount > 0 && (
-            <span className="text-[11px] font-semibold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded-full">
+            <span className="font-mono text-[10px] font-medium text-black bg-zinc-100 border border-black px-1.5 py-0.5 rounded-md">
               {exerciseCount}
             </span>
           )}
         </div>
-        <p className="text-[11px] text-slate-500 truncate mt-1">
+        <p className="font-body text-[10px] text-zinc-500 truncate mt-1">
           {category.subtitle_fr}
         </p>
       </div>
 
-      {/* Distinct visual badge for Cardio */}
+      {/* Cardio Badge */}
       {isCardio && (
-        <div className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase bg-rose-600 text-white">
+        <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-md text-[9px] font-mono font-bold uppercase bg-black text-white border border-black">
           Cardio
         </div>
       )}

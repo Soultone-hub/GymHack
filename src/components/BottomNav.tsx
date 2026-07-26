@@ -19,94 +19,56 @@ export const BottomNav: React.FC<BottomNavProps> = ({
   hasActiveSession = false,
   onLaunchActiveSession,
 }) => {
+  const tabs = [
+    { id: 'home' as ViewMode, icon: LayoutGrid, label: 'Zones' },
+    { id: 'list' as ViewMode, icon: Dumbbell, label: 'Exercices' },
+    { id: 'workouts' as ViewMode, icon: FolderKanban, label: 'Séances', count: workoutsCount },
+    { id: 'favorites' as ViewMode, icon: Heart, label: 'Favoris', count: favoritesCount },
+  ];
+
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-lg border-t border-slate-200 px-3 py-2 pb-safe shadow-lg">
-      {/* Optional Active Session Floating Pill bar if session in progress */}
+    <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t-[3px] border-black px-3 py-2 pb-safe nb-shadow">
+      {/* Active Session Pill */}
       {hasActiveSession && currentView !== 'active-workout' && onLaunchActiveSession && (
         <button
           onClick={onLaunchActiveSession}
-          className="w-full mb-2 bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-4 rounded-xl flex items-center justify-between shadow-md text-xs font-semibold tracking-wide transition-colors"
+          className="w-full mb-2 bg-black text-white py-2.5 px-4 rounded-xl border-2 border-black nb-shadow-sm nb-press flex items-center justify-between font-body font-bold text-xs tracking-wide"
         >
           <div className="flex items-center gap-2">
             <Play className="w-4 h-4 fill-white" />
             <span>Séance en cours</span>
           </div>
-          <span className="text-[10px] bg-black/20 px-2 py-0.5 rounded-full font-mono">
+          <span className="font-mono text-[10px] bg-white/20 px-2 py-0.5 rounded-md">
             Reprendre →
           </span>
         </button>
       )}
 
       <div className="flex items-center justify-around max-w-md mx-auto">
-        {/* Tab 1: Accueil (Zones Anatomiques) */}
-        <button
-          onClick={() => onNavigate('home')}
-          className={`flex flex-col items-center py-1 px-3 rounded-xl transition-all ${
-            currentView === 'home'
-              ? 'text-blue-600 font-semibold'
-              : 'text-slate-500 hover:text-slate-800'
-          }`}
-        >
-          <LayoutGrid className="w-5 h-5" />
-          <span className="text-[10px] uppercase tracking-wider mt-1">
-            Zones
-          </span>
-        </button>
-
-        {/* Tab 2: Exercices (Catalogue & Filtres) */}
-        <button
-          onClick={() => onNavigate('list')}
-          className={`flex flex-col items-center py-1 px-3 rounded-xl transition-all ${
-            currentView === 'list'
-              ? 'text-blue-600 font-semibold'
-              : 'text-slate-500 hover:text-slate-800'
-          }`}
-        >
-          <Dumbbell className="w-5 h-5" />
-          <span className="text-[10px] uppercase tracking-wider mt-1">
-            Exercices
-          </span>
-        </button>
-
-        {/* Tab 3: Mes Séances (Folders / Playlists) */}
-        <button
-          onClick={() => onNavigate('workouts')}
-          className={`relative flex flex-col items-center py-1 px-3 rounded-xl transition-all ${
-            currentView === 'workouts'
-              ? 'text-blue-600 font-semibold'
-              : 'text-slate-500 hover:text-slate-800'
-          }`}
-        >
-          <FolderKanban className="w-5 h-5" />
-          <span className="text-[10px] uppercase tracking-wider mt-1">
-            Séances
-          </span>
-          {workoutsCount > 0 && (
-            <span className="absolute top-0 right-2 w-4 h-4 rounded-full bg-blue-600 text-white text-[9px] font-mono flex items-center justify-center font-bold">
-              {workoutsCount}
-            </span>
-          )}
-        </button>
-
-        {/* Tab 4: Favoris */}
-        <button
-          onClick={() => onNavigate('favorites')}
-          className={`relative flex flex-col items-center py-1 px-3 rounded-xl transition-all ${
-            currentView === 'favorites'
-              ? 'text-emerald-600 font-semibold'
-              : 'text-slate-500 hover:text-slate-800'
-          }`}
-        >
-          <Heart className={`w-5 h-5 ${currentView === 'favorites' ? 'fill-emerald-600' : ''}`} />
-          <span className="text-[10px] uppercase tracking-wider mt-1">
-            Favoris
-          </span>
-          {favoritesCount > 0 && (
-            <span className="absolute top-0 right-2 w-4 h-4 rounded-full bg-emerald-600 text-white text-[9px] font-mono flex items-center justify-center font-bold">
-              {favoritesCount}
-            </span>
-          )}
-        </button>
+        {tabs.map(({ id, icon: Icon, label, count }) => {
+          const isActive = currentView === id;
+          return (
+            <button
+              key={id}
+              onClick={() => onNavigate(id)}
+              className={`relative flex flex-col items-center py-1.5 px-3 rounded-xl transition-all nb-press ${
+                isActive
+                  ? 'bg-black text-white border-2 border-black nb-shadow-sm'
+                  : 'text-zinc-500 hover:text-black border-2 border-transparent'
+              }`}
+            >
+              <Icon className={`w-5 h-5 ${isActive && id === 'favorites' ? 'fill-white' : ''}`} />
+              <span className="font-body text-[9px] font-bold uppercase tracking-wider mt-1">
+                {label}
+              </span>
+              {count !== undefined && count > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-black text-white font-mono text-[9px] flex items-center justify-center font-bold border border-white">
+                  {count}
+                </span>
+              )}
+            </button>
+          );
+        })}
       </div>
     </div>
   );

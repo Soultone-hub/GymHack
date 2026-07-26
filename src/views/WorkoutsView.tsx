@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { WorkoutFolder, Exercise } from '../types';
 import { TARGET_FRENCH_MAP, EQUIPMENT_FRENCH_MAP } from '../data/categories';
-import { Plus, Trash2, Edit3, Dumbbell, Play, ChevronRight, X, ArrowLeft, MoveUp, MoveDown, Check } from 'lucide-react';
+import { Plus, Trash2, Edit3, Dumbbell, Play, ChevronRight, X, ArrowLeft, MoveUp, MoveDown } from 'lucide-react';
 
 interface WorkoutsViewProps {
   folders: WorkoutFolder[];
@@ -44,58 +44,48 @@ export const WorkoutsView: React.FC<WorkoutsViewProps> = ({
   };
 
   const handleRenameSubmit = (folderId: string) => {
-    if (editingName.trim()) {
-      onRenameFolder(folderId, editingName.trim());
-    }
+    if (editingName.trim()) onRenameFolder(folderId, editingName.trim());
     setEditingFolderId(null);
   };
 
   return (
-    <div className="pb-28 pt-4 px-4 max-w-lg mx-auto animate-fade-in">
-      {/* View Header */}
-      <div className="flex items-center justify-between mb-4">
+    <div className="pb-32 pt-5 px-4 max-w-lg mx-auto animate-fade-in relative">
+
+      {/* Section Title */}
+      <div className="flex items-center justify-between mb-5">
         <div>
-          <h1 className="text-xl font-bold text-slate-900 tracking-tight">
-            Mes Séances
-          </h1>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Organisez vos entraînements en dossiers
+          <h1 className="font-display text-2xl text-black tracking-wide leading-none">Mes Séances</h1>
+          <p className="font-mono text-[11px] text-zinc-500 mt-1 uppercase tracking-wider">
+            {folders.length} dossier{folders.length > 1 ? 's' : ''} · Organisez vos entraînements
           </p>
         </div>
-
-        <button
-          onClick={() => setIsCreating(true)}
-          className="px-3.5 py-2 rounded-xl bg-blue-600 text-white text-xs font-semibold flex items-center gap-1.5 shadow-sm hover:bg-blue-700"
-        >
-          <Plus className="w-4 h-4" /> Nouvelle séance
-        </button>
       </div>
 
-      {/* Modal / Form for creating a new folder */}
+      {/* New Folder Creation Form */}
       {isCreating && (
-        <form onSubmit={handleCreate} className="bg-white rounded-2xl p-4 border border-blue-200 shadow-sm mb-4 space-y-3">
-          <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+        <form onSubmit={handleCreate} className="bg-white rounded-2xl p-4 border-2 border-black nb-shadow mb-5 space-y-3">
+          <p className="font-mono text-xs font-bold text-black uppercase tracking-wider">
             Nommer la séance
-          </h3>
+          </p>
           <input
             type="text"
             value={newFolderName}
             onChange={(e) => setNewFolderName(e.target.value)}
-            placeholder="ex: Push - Force & Volume"
+            placeholder="ex: Push · Force & Volume"
             autoFocus
-            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-blue-500"
+            className="w-full bg-zinc-50 border-2 border-black rounded-xl px-4 py-2.5 font-body text-sm text-black focus:outline-none focus:bg-white nb-shadow-sm"
           />
-          <div className="flex justify-end gap-2">
+          <div className="flex gap-2">
             <button
               type="button"
               onClick={() => setIsCreating(false)}
-              className="px-4 py-2 rounded-xl bg-slate-100 text-slate-600 text-xs font-semibold"
+              className="flex-1 py-2.5 rounded-xl border-2 border-black bg-zinc-100 text-black font-body font-bold text-xs nb-shadow-sm nb-press"
             >
               Annuler
             </button>
             <button
               type="submit"
-              className="px-5 py-2 rounded-xl bg-blue-600 text-white font-semibold text-xs hover:bg-blue-700"
+              className="flex-1 py-2.5 rounded-xl border-2 border-black bg-black text-white font-body font-bold text-xs nb-shadow-sm nb-press hover:bg-zinc-800 transition-colors"
             >
               Créer
             </button>
@@ -103,20 +93,18 @@ export const WorkoutsView: React.FC<WorkoutsViewProps> = ({
         </form>
       )}
 
-      {/* Delete Folder Confirmation Dialog */}
+      {/* Delete Confirmation Modal */}
       {deletingFolderId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-2xl p-5 border border-slate-200 max-w-sm w-full space-y-3 shadow-xl">
-            <h3 className="text-base font-bold text-slate-900">
-              Confirmer la suppression ?
-            </h3>
-            <p className="text-xs text-slate-600">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+          <div className="bg-white rounded-2xl p-5 border-2 border-black nb-shadow-lg max-w-sm w-full space-y-3">
+            <h3 className="font-display text-xl text-black">Supprimer ?</h3>
+            <p className="font-body text-xs text-zinc-600">
               Cette séance et sa liste d'exercices seront définitivement supprimées.
             </p>
             <div className="flex gap-2 pt-2">
               <button
                 onClick={() => setDeletingFolderId(null)}
-                className="flex-1 py-2 rounded-xl bg-slate-100 text-slate-700 text-xs font-semibold"
+                className="flex-1 py-2.5 rounded-xl border-2 border-black bg-zinc-100 text-black font-body font-bold text-xs nb-shadow-sm nb-press"
               >
                 Annuler
               </button>
@@ -126,7 +114,7 @@ export const WorkoutsView: React.FC<WorkoutsViewProps> = ({
                   if (activeFolderId === deletingFolderId) setActiveFolderId(null);
                   setDeletingFolderId(null);
                 }}
-                className="flex-1 py-2 rounded-xl bg-rose-600 text-white text-xs font-semibold hover:bg-rose-700"
+                className="flex-1 py-2.5 rounded-xl border-2 border-black bg-black text-white font-body font-bold text-xs nb-shadow-sm nb-press hover:bg-zinc-800 transition-colors"
               >
                 Supprimer
               </button>
@@ -135,73 +123,64 @@ export const WorkoutsView: React.FC<WorkoutsViewProps> = ({
         </div>
       )}
 
-      {/* Folder Detail View when a folder is selected */}
+      {/* Folder Detail View */}
       {activeFolder ? (
         <div className="space-y-4">
+          {/* Back + Actions */}
           <div className="flex items-center justify-between">
             <button
               onClick={() => setActiveFolderId(null)}
-              className="flex items-center gap-1.5 text-xs font-semibold text-slate-700 bg-white px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm"
+              className="flex items-center gap-1.5 font-body font-bold text-xs text-black bg-white px-3 py-2 rounded-xl border-2 border-black nb-shadow-sm nb-press"
             >
               <ArrowLeft className="w-3.5 h-3.5" /> Mes Séances
             </button>
-
             <div className="flex items-center gap-2">
               <button
-                onClick={() => {
-                  setEditingFolderId(activeFolder.id);
-                  setEditingName(activeFolder.name);
-                }}
-                className="w-8 h-8 rounded-full bg-white text-slate-500 border border-slate-200 flex items-center justify-center hover:text-slate-800 shadow-sm"
-                title="Renommer"
+                onClick={() => { setEditingFolderId(activeFolder.id); setEditingName(activeFolder.name); }}
+                className="w-9 h-9 rounded-xl border-2 border-black bg-white text-black flex items-center justify-center nb-shadow-sm nb-press hover:bg-zinc-100"
               >
                 <Edit3 className="w-4 h-4" />
               </button>
               <button
                 onClick={() => setDeletingFolderId(activeFolder.id)}
-                className="w-8 h-8 rounded-full bg-rose-50 text-rose-600 border border-rose-200 flex items-center justify-center hover:bg-rose-100 shadow-sm"
-                title="Supprimer"
+                className="w-9 h-9 rounded-xl border-2 border-black bg-black text-white flex items-center justify-center nb-shadow-sm nb-press hover:bg-zinc-800"
               >
                 <Trash2 className="w-4 h-4" />
               </button>
             </div>
           </div>
 
-          {/* Folder Title Banner */}
-          <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
+          {/* Folder Title Card */}
+          <div className="bg-white rounded-2xl p-4 border-2 border-black nb-shadow">
             {editingFolderId === activeFolder.id ? (
               <div className="flex gap-2">
                 <input
                   type="text"
                   value={editingName}
                   onChange={(e) => setEditingName(e.target.value)}
-                  className="flex-1 bg-slate-50 border border-blue-500 rounded-xl px-3 py-1.5 text-sm text-slate-900"
+                  className="flex-1 bg-zinc-50 border-2 border-black rounded-xl px-3 py-1.5 font-body text-sm text-black focus:outline-none"
                 />
                 <button
                   onClick={() => handleRenameSubmit(activeFolder.id)}
-                  className="px-3 py-1.5 rounded-xl bg-emerald-600 text-white text-xs font-semibold"
+                  className="px-3 py-1.5 rounded-xl border-2 border-black bg-black text-white font-mono text-xs font-bold nb-press"
                 >
                   OK
                 </button>
               </div>
             ) : (
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-xl font-bold text-slate-900">
-                    {activeFolder.name}
-                  </h2>
-                  <p className="text-xs text-slate-500 mt-0.5">
-                    {activeFolder.exercises.length} EXERCICE{activeFolder.exercises.length > 1 ? 'S' : ''}
-                  </p>
-                </div>
+              <div>
+                <h2 className="font-display text-2xl text-black leading-tight">{activeFolder.name}</h2>
+                <p className="font-mono text-[11px] text-zinc-500 uppercase tracking-wider mt-1">
+                  {activeFolder.exercises.length} EXERCICE{activeFolder.exercises.length > 1 ? 'S' : ''}
+                </p>
               </div>
             )}
 
-            {/* Prominent Green "Démarrer la séance" Button */}
+            {/* Start Session Button */}
             {activeFolder.exercises.length > 0 && (
               <button
                 onClick={() => onStartSession(activeFolder)}
-                className="w-full mt-4 py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-2 shadow-md transition-transform active:scale-[0.98]"
+                className="w-full mt-4 py-3.5 rounded-2xl border-2 border-black bg-black text-white font-body font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-2 nb-shadow nb-press hover:bg-zinc-800 transition-colors"
               >
                 <Play className="w-5 h-5 fill-white" />
                 <span>Démarrer la séance</span>
@@ -209,68 +188,58 @@ export const WorkoutsView: React.FC<WorkoutsViewProps> = ({
             )}
           </div>
 
-          {/* Reorderable List of Exercises inside the Folder */}
+          {/* Exercise List */}
           <div className="space-y-2">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-              Exercices de la séance ({activeFolder.exercises.length})
-            </span>
+            <p className="font-mono text-[11px] font-bold text-zinc-500 uppercase tracking-wider">
+              Exercices ({activeFolder.exercises.length})
+            </p>
 
             {activeFolder.exercises.length === 0 ? (
-              <div className="p-8 text-center text-sm text-slate-500 bg-white rounded-2xl border border-slate-200 shadow-sm">
-                Aucun exercice dans cette séance. Parcourez la bibliothèque et cliquez sur le bouton "+" pour en ajouter !
+              <div className="p-8 text-center border-2 border-black border-dashed rounded-2xl bg-zinc-50">
+                <p className="font-body text-sm font-bold text-black">Aucun exercice</p>
+                <p className="font-body text-xs text-zinc-500 mt-1">Parcourez la bibliothèque et cliquez sur "+" pour en ajouter.</p>
               </div>
             ) : (
               activeFolder.exercises.map((item, idx) => {
                 const ex = allExercises.find((e) => e.id === item.exerciseId);
                 if (!ex) return null;
-
                 return (
                   <div
                     key={ex.id}
-                    className="p-3.5 bg-white rounded-2xl border border-slate-200 flex items-center justify-between gap-3 group shadow-sm"
+                    className="p-3.5 bg-white rounded-2xl border-2 border-black nb-shadow flex items-center justify-between gap-3"
                   >
-                    <div
-                      onClick={() => onSelectExercise(ex)}
-                      className="flex-1 cursor-pointer"
-                    >
+                    <div onClick={() => onSelectExercise(ex)} className="flex-1 cursor-pointer">
                       <div className="flex items-center gap-2">
-                        <span className="text-xs text-blue-600 font-bold bg-blue-50 px-2 py-0.5 rounded-md">
+                        <span className="font-mono text-[10px] font-bold text-white bg-black px-2 py-0.5 rounded-md">
                           #{idx + 1}
                         </span>
-                        <h4 className="font-semibold text-sm text-slate-900 group-hover:text-blue-600">
-                          {ex.name}
-                        </h4>
+                        <h4 className="font-body font-bold text-sm text-black">{ex.name}</h4>
                       </div>
-                      <p className="text-xs text-slate-500 mt-1">
-                        {TARGET_FRENCH_MAP[ex.target]} <span className="text-blue-500">•</span> {EQUIPMENT_FRENCH_MAP[ex.equipment]}
+                      <p className="font-mono text-[10px] text-zinc-500 mt-1">
+                        {TARGET_FRENCH_MAP[ex.target]} · {EQUIPMENT_FRENCH_MAP[ex.equipment]}
                       </p>
                     </div>
 
-                    {/* Reorder and Delete Actions */}
                     <div className="flex items-center gap-1">
                       <div className="flex flex-col">
                         <button
                           disabled={idx === 0}
                           onClick={() => onReorderExercisesInFolder(activeFolder.id, idx, idx - 1)}
-                          className="p-1 text-slate-400 hover:text-slate-700 disabled:opacity-20"
-                          title="Monter"
+                          className="p-1 text-zinc-400 hover:text-black disabled:opacity-20"
                         >
                           <MoveUp className="w-3.5 h-3.5" />
                         </button>
                         <button
                           disabled={idx === activeFolder.exercises.length - 1}
                           onClick={() => onReorderExercisesInFolder(activeFolder.id, idx, idx + 1)}
-                          className="p-1 text-slate-400 hover:text-slate-700 disabled:opacity-20"
-                          title="Descendre"
+                          className="p-1 text-zinc-400 hover:text-black disabled:opacity-20"
                         >
                           <MoveDown className="w-3.5 h-3.5" />
                         </button>
                       </div>
-
                       <button
                         onClick={() => onRemoveExerciseFromFolder(activeFolder.id, ex.id)}
-                        className="p-2 text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
-                        title="Retirer"
+                        className="p-2 text-black hover:bg-zinc-100 rounded-lg border-2 border-transparent hover:border-black transition-all nb-press"
                       >
                         <X className="w-4 h-4" />
                       </button>
@@ -282,62 +251,58 @@ export const WorkoutsView: React.FC<WorkoutsViewProps> = ({
           </div>
         </div>
       ) : (
-        /* Vertical List of Workout Folders */
+        /* Folder List */
         <div className="space-y-3">
           {folders.length === 0 ? (
-            <div className="p-8 text-center text-sm text-slate-500 bg-white rounded-2xl border border-slate-200 my-4 shadow-sm">
-              <Dumbbell className="w-10 h-10 text-blue-600 mx-auto mb-2 opacity-80" />
-              <p className="font-bold text-base text-slate-900 mb-1">
-                Aucune séance enregistrée
+            <div className="p-8 text-center border-2 border-black border-dashed rounded-2xl bg-zinc-50 my-4">
+              <Dumbbell className="w-10 h-10 text-black mx-auto mb-3 opacity-60" />
+              <p className="font-display text-xl text-black mb-1">Aucune séance</p>
+              <p className="font-body text-xs text-zinc-500 mb-4">
+                Créez votre premier dossier de séance (ex: "Jambes & Abdos") pour regrouper vos exercices.
               </p>
-              <p className="text-xs">
-                Créez votre premier dossier de séance (ex: "Jambes & Abdos", "Haut du corps") pour regrouper vos exercices préférés.
-              </p>
-              <button
-                onClick={() => setIsCreating(true)}
-                className="mt-4 px-5 py-2.5 rounded-xl bg-blue-600 text-white font-semibold text-xs tracking-wide shadow-sm hover:bg-blue-700"
-              >
-                + Créer ma première séance
-              </button>
             </div>
           ) : (
             folders.map((folder) => (
               <div
                 key={folder.id}
                 onClick={() => setActiveFolderId(folder.id)}
-                className="group p-4 bg-white rounded-2xl border border-slate-200 hover:border-blue-400 cursor-pointer transition-all flex items-center justify-between shadow-sm hover:shadow-md"
+                className="group p-4 bg-white rounded-2xl border-2 border-black nb-shadow nb-press cursor-pointer flex items-center justify-between hover:bg-zinc-50 transition-colors"
               >
                 <div className="flex items-center gap-3.5">
-                  <div className="w-11 h-11 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 group-hover:bg-blue-100">
-                    <Dumbbell className="w-5 h-5" />
+                  <div className="w-11 h-11 rounded-xl bg-black flex items-center justify-center border-2 border-black nb-shadow-sm">
+                    <Dumbbell className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-base text-slate-900 group-hover:text-blue-600">
-                      {folder.name}
-                    </h3>
-                    <p className="text-xs text-slate-500 mt-0.5 font-medium">
-                      {folder.exercises.length} EXERCICE{folder.exercises.length > 1 ? 'S' : ''}
+                    <h3 className="font-body font-bold text-base text-black">{folder.name}</h3>
+                    <p className="font-mono text-[10px] text-zinc-500 mt-0.5 uppercase tracking-wider">
+                      {folder.exercises.length} exercice{folder.exercises.length > 1 ? 's' : ''}
                     </p>
                   </div>
                 </div>
-
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onStartSession(folder);
-                    }}
-                    className="px-3 py-1.5 rounded-xl bg-emerald-600 text-white text-xs font-semibold uppercase flex items-center gap-1 hover:bg-emerald-700 shadow-sm"
-                    title="Lancer"
+                    onClick={(e) => { e.stopPropagation(); onStartSession(folder); }}
+                    className="px-3 py-1.5 rounded-xl border-2 border-black bg-black text-white font-body font-bold text-xs flex items-center gap-1 nb-shadow-sm nb-press hover:bg-zinc-800 transition-colors"
                   >
-                    <Play className="w-3.5 h-3.5 fill-white" /> Démarrer
+                    <Play className="w-3.5 h-3.5 fill-white" /> Go
                   </button>
-                  <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-slate-700" />
+                  <ChevronRight className="w-5 h-5 text-zinc-400" />
                 </div>
               </div>
             ))
           )}
         </div>
+      )}
+
+      {/* FAB — New Workout Button (bottom right circle) */}
+      {!activeFolder && (
+        <button
+          onClick={() => setIsCreating(true)}
+          className="fixed bottom-24 right-5 w-14 h-14 rounded-full bg-black text-white border-2 border-black nb-shadow-lg nb-press hover:bg-zinc-800 transition-colors flex items-center justify-center z-30"
+          title="Nouvelle séance"
+        >
+          <Plus className="w-7 h-7" strokeWidth={2.5} />
+        </button>
       )}
     </div>
   );

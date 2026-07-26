@@ -9,9 +9,9 @@ import { ActiveWorkoutRunner } from './components/ActiveWorkoutRunner';
 import { EquipmentSheet } from './components/EquipmentSheet';
 import { AddToWorkoutModal } from './components/AddToWorkoutModal';
 import { BottomNav } from './components/BottomNav';
+import { Header } from './components/Header';
 import { AuthScreen } from './components/AuthScreen';
 import { useGymData } from './hooks/useGymData';
-
 import { fetchExercisesByIds } from './services/exerciseService';
 
 export default function App() {
@@ -112,7 +112,14 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 text-slate-900 flex flex-col justify-between selection:bg-blue-600 selection:text-white">
+    <div className="min-h-screen bg-white text-black flex flex-col justify-between">
+      {/* Global Header — visible on all main views */}
+      {currentView !== 'active-workout' && (
+        <Header
+          userEmail={gym.user?.email}
+          onSignOut={gym.signOut}
+        />
+      )}
       <main className="flex-1 w-full">
 
         {/* HOME */}
@@ -128,8 +135,6 @@ export default function App() {
               setSelectedExercise(ex);
               setCurrentView('detail');
             }}
-            onSignOut={gym.signOut}
-            userEmail={gym.user?.email}
           />
         )}
 

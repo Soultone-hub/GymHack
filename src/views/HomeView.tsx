@@ -2,7 +2,7 @@ import React from 'react';
 import { CATEGORIES } from '../data/categories';
 import { CategoryInfo, CategoryId, Exercise } from '../types';
 import { CategoryTile } from '../components/CategoryTile';
-import { Search, SlidersHorizontal, Dumbbell, LogOut } from 'lucide-react';
+import { Search, SlidersHorizontal } from 'lucide-react';
 
 interface HomeViewProps {
   exercises: Exercise[];
@@ -12,8 +12,6 @@ interface HomeViewProps {
   onOpenEquipmentSheet: () => void;
   selectedEquipment: string[];
   onSelectExercise: (exercise: Exercise) => void;
-  onSignOut?: () => void;
-  userEmail?: string | null;
 }
 
 export const HomeView: React.FC<HomeViewProps> = ({
@@ -24,168 +22,122 @@ export const HomeView: React.FC<HomeViewProps> = ({
   onOpenEquipmentSheet,
   selectedEquipment,
   onSelectExercise,
-  onSignOut,
-  userEmail,
 }) => {
-  // Count exercises per category
-  const getCategoryCount = (categoryId: CategoryId) => {
-    return exercises.filter((ex) => ex.category === categoryId).length;
-  };
+  const getCategoryCount = (categoryId: CategoryId) =>
+    exercises.filter((ex) => ex.category === categoryId).length;
 
   return (
-    <div className="pb-28 pt-4 px-4 max-w-lg mx-auto animate-fade-in">
-      {/* Brand Header with Logout button */}
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-blue-600 animate-pulse" />
-            <h1 className="text-2xl font-black tracking-tight text-slate-900 uppercase leading-none">
-              GymHack
-            </h1>
-          </div>
-          <p className="text-xs text-slate-500 mt-1 truncate max-w-[200px]">
-            {userEmail ? userEmail : "Bibliothèque d'exercices • Sélection par zone"}
-          </p>
-        </div>
+    <div className="pb-28 pt-5 px-4 max-w-lg mx-auto animate-fade-in">
 
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1.5 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200 text-[10px] font-bold text-emerald-700">
-            <Dumbbell className="w-3 h-3 text-emerald-600" />
-            <span>1 324 EXERCICES</span>
-          </div>
-
-          {onSignOut && (
-            <button
-              onClick={onSignOut}
-              className="w-8 h-8 rounded-full bg-slate-100 border border-slate-200 text-slate-500 hover:text-rose-600 hover:bg-rose-50 hover:border-rose-200 flex items-center justify-center transition-colors shadow-sm"
-              title="Déconnexion"
-            >
-              <LogOut className="w-4 h-4" />
-            </button>
-          )}
-        </div>
-      </div>
-
-      {/* Fast Search Bar */}
+      {/* Search Bar */}
       <div className="relative mb-5">
-        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-400" />
+        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-black" />
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
-          placeholder="Rechercher un exercice (ex: squat, tirage, dips...)"
-          className="w-full bg-white border border-slate-200 rounded-2xl pl-10 pr-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-colors shadow-sm"
+          placeholder="Rechercher un exercice…"
+          className="w-full bg-white border-2 border-black rounded-xl pl-10 pr-4 py-3 font-body text-sm text-black placeholder-zinc-400 focus:outline-none focus:bg-zinc-50 nb-shadow transition-all"
         />
         {searchQuery && (
           <button
             onClick={() => onSearchChange('')}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full hover:bg-slate-200"
+            className="absolute right-3 top-1/2 -translate-y-1/2 font-mono text-[10px] font-bold text-black bg-zinc-100 border border-black px-2 py-0.5 rounded-md hover:bg-zinc-200"
           >
             Effacer
           </button>
         )}
       </div>
 
-      {/* Instant Search Overlay List if query is typed */}
+      {/* Search Results */}
       {searchQuery.trim() ? (
-        <div className="mb-6 space-y-2">
-          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-            Résultats de recherche ({exercises.length})
+        <div className="space-y-2">
+          <p className="font-mono text-[11px] font-medium text-zinc-600 uppercase tracking-wider mb-3">
+            {exercises.length} résultat{exercises.length > 1 ? 's' : ''} pour "{searchQuery}"
           </p>
           {exercises.length === 0 ? (
-            <div className="p-6 text-center text-sm text-slate-500 bg-white rounded-2xl border border-slate-200 shadow-sm">
-              Aucun exercice ne correspond à "{searchQuery}".
+            <div className="p-6 text-center border-2 border-black rounded-2xl nb-shadow bg-white">
+              <p className="font-body text-sm font-bold text-black">Aucun résultat</p>
+              <p className="font-body text-xs text-zinc-500 mt-1">Essayez un autre terme de recherche.</p>
             </div>
           ) : (
-            <div className="space-y-2">
-              {exercises.map((ex) => (
-                <div
-                  key={ex.id}
-                  onClick={() => onSelectExercise(ex)}
-                  className="p-3.5 bg-white rounded-xl border border-slate-200 hover:border-blue-500 cursor-pointer flex items-center justify-between shadow-sm transition-all"
-                >
-                  <div className="flex items-center gap-3">
-                    {(ex.image_url || ex.gif_url) && (
-                      <div className="w-10 h-10 rounded-lg overflow-hidden bg-slate-100 shrink-0">
-                        <img src={ex.image_url ?? ex.gif_url ?? ''} alt={ex.name} className="w-full h-full object-cover" />
-                      </div>
-                    )}
-                    <div>
-                      <h4 className="font-semibold text-sm text-slate-900">
-                        {ex.name}
-                      </h4>
-                      <p className="text-xs text-slate-500 mt-0.5">
-                        {ex.body_part} • {ex.equipment}
-                      </p>
+            exercises.map((ex) => (
+              <div
+                key={ex.id}
+                onClick={() => onSelectExercise(ex)}
+                className="p-3.5 bg-white rounded-xl border-2 border-black nb-shadow nb-press cursor-pointer flex items-center justify-between hover:bg-zinc-50 transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  {(ex.image_url || ex.gif_url) && (
+                    <div className="w-10 h-10 rounded-lg overflow-hidden bg-zinc-100 shrink-0 border-2 border-black">
+                      <img src={ex.image_url ?? ex.gif_url ?? ''} alt={ex.name} className="w-full h-full object-cover" />
                     </div>
+                  )}
+                  <div>
+                    <h4 className="font-body font-bold text-sm text-black">{ex.name}</h4>
+                    <p className="font-mono text-[10px] text-zinc-500 mt-0.5">{ex.body_part} · {ex.equipment}</p>
                   </div>
-                  <span className="text-xs font-medium bg-slate-100 text-slate-700 px-2 py-1 rounded-md">
-                    {ex.target}
-                  </span>
                 </div>
-              ))}
-            </div>
+                <span className="font-mono text-[10px] font-medium text-black bg-zinc-100 border border-black px-2 py-0.5 rounded-md shrink-0">
+                  {ex.target}
+                </span>
+              </div>
+            ))
           )}
         </div>
       ) : (
         <>
-          {/* Main 2 columns x 5 rows Grid for the 10 categories */}
-          <div className="mb-5">
-            <div className="flex items-center justify-between mb-2.5">
-              <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">
-                1. Choisissez une zone anatomique
-              </span>
-              <span className="text-xs text-blue-600 font-semibold bg-blue-50 px-2 py-0.5 rounded-full">
-                10 zones
-              </span>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              {CATEGORIES.map((cat: CategoryInfo) => (
-                <CategoryTile
-                  key={cat.id}
-                  category={cat}
-                  exerciseCount={getCategoryCount(cat.id)}
-                  onClick={() => onSelectCategory(cat.id)}
-                />
-              ))}
-            </div>
+          {/* Section Title */}
+          <div className="flex items-center justify-between mb-3">
+            <p className="font-mono text-[11px] font-bold text-zinc-500 uppercase tracking-wider">
+              Zone anatomique
+            </p>
+            <span className="font-mono text-[10px] text-black bg-zinc-100 border-2 border-black px-2 py-0.5 rounded-md nb-shadow-sm">
+              10 zones
+            </span>
           </div>
 
-          {/* Shortcut Row + Equipment Filter Sheet Trigger */}
-          <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
-            <div className="flex items-center justify-between mb-2.5">
-              <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">
-                Raccourcis & Filtre rapide
-              </span>
+          {/* Categories Grid */}
+          <div className="grid grid-cols-2 gap-3 mb-5">
+            {CATEGORIES.map((cat: CategoryInfo) => (
+              <CategoryTile
+                key={cat.id}
+                category={cat}
+                exerciseCount={getCategoryCount(cat.id)}
+                onClick={() => onSelectCategory(cat.id)}
+              />
+            ))}
+          </div>
+
+          {/* Equipment Filter Row */}
+          <div className="border-2 border-black rounded-2xl p-4 bg-white nb-shadow">
+            <div className="flex items-center justify-between mb-3">
+              <p className="font-mono text-[11px] font-bold text-black uppercase tracking-wider">
+                Filtre Équipement
+              </p>
               {selectedEquipment.length > 0 && (
-                <span className="text-[10px] font-bold text-blue-600 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full">
-                  {selectedEquipment.length} équipt
+                <span className="font-mono text-[10px] font-bold text-white bg-black border border-black px-2 py-0.5 rounded-md">
+                  {selectedEquipment.length} actif{selectedEquipment.length > 1 ? 's' : ''}
                 </span>
               )}
             </div>
-
-            {/* Horizontal Scroll Pill Row for Category Shortcuts */}
             <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
-              {/* Equipment sheet button */}
               <button
                 onClick={onOpenEquipmentSheet}
-                className={`shrink-0 px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors border ${
+                className={`shrink-0 px-3 py-2 rounded-xl text-xs font-body font-bold flex items-center gap-1.5 transition-colors border-2 border-black nb-shadow-sm nb-press ${
                   selectedEquipment.length > 0
-                    ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
-                    : 'bg-slate-50 text-slate-800 border-slate-200 hover:border-blue-400'
+                    ? 'bg-black text-white'
+                    : 'bg-white text-black hover:bg-zinc-100'
                 }`}
               >
-                <SlidersHorizontal className="w-3.5 h-3.5 text-blue-600" />
-                <span>Équipement ↓</span>
+                <SlidersHorizontal className="w-3.5 h-3.5" />
+                <span>Équipement</span>
               </button>
-
-              {/* Category Pills */}
               {CATEGORIES.map((cat) => (
                 <button
                   key={cat.id}
                   onClick={() => onSelectCategory(cat.id)}
-                  className="shrink-0 px-3 py-2 rounded-xl text-xs text-slate-700 bg-slate-50 border border-slate-200 hover:border-blue-400 transition-colors whitespace-nowrap font-medium"
+                  className="shrink-0 px-3 py-2 rounded-xl font-body font-semibold text-xs text-black bg-white border-2 border-black nb-shadow-sm nb-press hover:bg-zinc-100 transition-colors whitespace-nowrap"
                 >
                   {cat.name_fr}
                 </button>
