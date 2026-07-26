@@ -5,6 +5,10 @@
    Tailwind v4 proper syntax: @theme + @utility
    ══════════════════════════════════════════════ */
 
+:root {
+  color-scheme: light;
+}
+
 /* ── Custom Font Families (Tailwind v4 theme tokens) ─ */
 @theme {
   --font-sketch:  'Londrina Sketch', cursive;
@@ -42,7 +46,8 @@
 
 /* ── Base styles ─────────────────────────────────── */
 @layer base {
-  body {
+  html, body {
+    color-scheme: light;
     background-color: #ffffff;
     color: #000000;
     font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -78,4 +83,3 @@
   0%   { transform: translateX(0%); }
   100% { transform: translateX(-50%); }
 }
-
