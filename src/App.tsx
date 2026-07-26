@@ -72,6 +72,27 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategory, selectedEquipment, searchQuery, currentView]);
 
+  // ── Guard: detail view on refresh but no exercise in state ───────────────────
+  useEffect(() => {
+    if (currentView === 'detail' && !selectedExercise) {
+      // Try to load exercise from hash id, fallback to home
+      const { exerciseId } = parseHash();
+      if (exerciseId) {
+        fetchExercisesByIds([exerciseId]).then((results) => {
+          if (results.length > 0) {
+            setSelectedExercise(results[0]);
+          } else {
+            navigate('home');
+          }
+        }).catch(() => navigate('home'));
+      } else {
+        navigate('home');
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentView]);
+
+
   // ── Load exercises for search overlay ───────────────────────────────────────
   useEffect(() => {
     if (isSearchOpen && searchOverlayQuery.trim()) {

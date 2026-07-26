@@ -32,7 +32,7 @@ export const ExerciseDetailView: React.FC<ExerciseDetailViewProps> = ({
     [];
 
   return (
-    <div className="pb-36 pt-4 max-w-lg mx-auto animate-fade-in px-4">
+    <div className="pb-44 pt-4 max-w-lg mx-auto animate-fade-in px-4">
       {/* Top Header Bar */}
       <div className="flex items-center justify-between mb-4">
         <button
@@ -146,8 +146,8 @@ export const ExerciseDetailView: React.FC<ExerciseDetailViewProps> = ({
       {/* Execution Advice Widget */}
       <TempoGuideWidget exerciseName={exercise.name} />
 
-      {/* Fixed Bottom Action Bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t-[3px] border-black p-4 pb-safe nb-shadow">
+      {/* Fixed Bottom Action Bar — sits above BottomNav */}
+      <div className="fixed bottom-[68px] left-0 right-0 z-30 bg-white border-t-2 border-black px-4 py-3">
         <div className="max-w-lg mx-auto flex items-center gap-3">
           <button
             onClick={() => onToggleFavorite(exercise)}
