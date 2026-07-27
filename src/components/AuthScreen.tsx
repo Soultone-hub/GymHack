@@ -32,9 +32,29 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
   };
 
   const formatAuthError = (err: unknown): string => {
-    if (!(err instanceof Error)) return 'Une erreur est survenue.';
-    const msg = err.message.toLowerCase();
+    let rawMsg = '';
+    if (typeof err === 'string') {
+      rawMsg = err;
+    } else if (err && typeof err === 'object') {
+      if ('message' in err && typeof (err as { message: unknown }).message === 'string') {
+        rawMsg = (err as { message: string }).message;
+      } else if ('error_description' in err && typeof (err as { error_description: unknown }).error_description === 'string') {
+        rawMsg = (err as { error_description: string }).error_description;
+      } else {
+        try {
+          const str = JSON.stringify(err);
+          rawMsg = str !== '{}' ? str : '';
+        } catch {
+          rawMsg = '';
+        }
+      }
+    }
 
+    const msg = rawMsg.toLowerCase();
+
+    if (!msg || msg === '{}' || msg === 'null' || msg === 'undefined') {
+      return 'Une erreur est survenue lors de l\'authentification. Veuillez vérifier vos identifiants ou réessayer.';
+    }
     if (msg.includes('invalid login credentials') || msg.includes('invalid_credentials')) {
       return 'Email ou mot de passe incorrect.';
     }
@@ -45,16 +65,19 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
       return 'Le mot de passe doit faire au moins 6 caractères.';
     }
     if (msg.includes('rate limit') || msg.includes('too many requests') || msg.includes('over_email_send_rate_limit')) {
-      return 'Trop de tentatives. Réessayez dans quelques minutes.';
+      return 'Trop de tentatives en peu de temps. Réessayez dans une minute.';
     }
     if (msg.includes('valid email') || msg.includes('invalid email') || msg.includes('unable to validate')) {
       return 'Adresse email invalide.';
+    }
+    if (msg.includes('request_timeout') || msg.includes('timeout')) {
+      return 'Le serveur prend du temps à répondre. Vérifiez votre connexion internet ou réessayez.';
     }
     if (msg.includes('signup_disabled')) {
       return 'L\'inscription par email est désactivée. Utilisez "Continuer avec Google".';
     }
 
-    return err.message;
+    return rawMsg;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -69,11 +92,8 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
         if (!password) return;
         const result = await onSignUpWithEmail(email, password);
         if (result.needsConfirmation) {
-          // Generic message — same whether account is new or already exists
-          // to prevent user enumeration attacks
           setSuccessMsg('Si cette adresse n\'est pas déjà inscrite, un email de confirmation vous a été envoyé. Vérifiez votre boîte mail (et les spams).');
         }
-        // If !needsConfirmation, user is auto-logged in via onAuthStateChange
       } else {
         await onResetPassword(email);
         setSuccessMsg('Si un compte existe avec cet email, un lien de réinitialisation a été envoyé. Vérifiez votre boîte mail (et les spams).');

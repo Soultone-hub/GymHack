@@ -137,28 +137,40 @@ export function useGymData() {
   }, []);
 
   const signInWithEmail = useCallback(async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) throw error;
+    const res = await Promise.race([
+      supabase.auth.signInWithPassword({ email, password }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error('REQUEST_TIMEOUT')), 12000),
+      ),
+    ]);
+    if (res.error) throw res.error;
   }, []);
 
   const signUpWithEmail = useCallback(async (email: string, password: string): Promise<{ needsConfirmation: boolean }> => {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: { emailRedirectTo: window.location.origin },
-    });
-    if (error) throw error;
-    // Always return needsConfirmation based on session presence.
-    // We intentionally do NOT check identities.length to avoid
-    // leaking whether an email is already registered (user enumeration).
-    return { needsConfirmation: !data.session };
+    const res = await Promise.race([
+      supabase.auth.signUp({
+        email,
+        password,
+        options: { emailRedirectTo: window.location.origin },
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error('REQUEST_TIMEOUT')), 12000),
+      ),
+    ]);
+    if (res.error) throw res.error;
+    return { needsConfirmation: !res.data.session };
   }, []);
 
   const resetPasswordForEmail = useCallback(async (email: string) => {
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: window.location.origin,
-    });
-    if (error) throw error;
+    const res = await Promise.race([
+      supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin,
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error('REQUEST_TIMEOUT')), 12000),
+      ),
+    ]);
+    if (res.error) throw res.error;
   }, []);
 
   const signOut = useCallback(async () => {
