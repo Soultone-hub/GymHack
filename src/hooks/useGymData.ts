@@ -141,13 +141,17 @@ export function useGymData() {
     if (error) throw error;
   }, []);
 
-  const signUpWithEmail = useCallback(async (email: string, password: string) => {
-    const { error } = await supabase.auth.signUp({
+  const signUpWithEmail = useCallback(async (email: string, password: string): Promise<{ needsConfirmation: boolean }> => {
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: { emailRedirectTo: window.location.origin },
     });
     if (error) throw error;
+    // Always return needsConfirmation based on session presence.
+    // We intentionally do NOT check identities.length to avoid
+    // leaking whether an email is already registered (user enumeration).
+    return { needsConfirmation: !data.session };
   }, []);
 
   const resetPasswordForEmail = useCallback(async (email: string) => {

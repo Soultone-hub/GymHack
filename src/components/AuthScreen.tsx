@@ -8,7 +8,7 @@ import {
 interface AuthScreenProps {
   onSignInWithGoogle: () => void;
   onSignInWithEmail: (email: string, pass: string) => Promise<void>;
-  onSignUpWithEmail: (email: string, pass: string) => Promise<void>;
+  onSignUpWithEmail: (email: string, pass: string) => Promise<{ needsConfirmation: boolean }>;
   onResetPassword: (email: string) => Promise<void>;
   isLoading?: boolean;
 }
@@ -31,6 +31,32 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
     setMode(m); setErrorMsg(null); setSuccessMsg(null);
   };
 
+  const formatAuthError = (err: unknown): string => {
+    if (!(err instanceof Error)) return 'Une erreur est survenue.';
+    const msg = err.message.toLowerCase();
+
+    if (msg.includes('invalid login credentials') || msg.includes('invalid_credentials')) {
+      return 'Email ou mot de passe incorrect.';
+    }
+    if (msg.includes('email not confirmed')) {
+      return 'Vous devez d\'abord confirmer votre email. Vérifiez votre boîte mail (y compris les spams).';
+    }
+    if (msg.includes('at least 6 characters') || msg.includes('password should be') || msg.includes('weak_password')) {
+      return 'Le mot de passe doit faire au moins 6 caractères.';
+    }
+    if (msg.includes('rate limit') || msg.includes('too many requests') || msg.includes('over_email_send_rate_limit')) {
+      return 'Trop de tentatives. Réessayez dans quelques minutes.';
+    }
+    if (msg.includes('valid email') || msg.includes('invalid email') || msg.includes('unable to validate')) {
+      return 'Adresse email invalide.';
+    }
+    if (msg.includes('signup_disabled')) {
+      return 'L\'inscription par email est désactivée. Utilisez "Continuer avec Google".';
+    }
+
+    return err.message;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
@@ -41,14 +67,19 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
         await onSignInWithEmail(email, password);
       } else if (mode === 'signup') {
         if (!password) return;
-        await onSignUpWithEmail(email, password);
-        setSuccessMsg('Un email de confirmation vous a été envoyé. Veuillez vérifier votre boîte de réception.');
+        const result = await onSignUpWithEmail(email, password);
+        if (result.needsConfirmation) {
+          // Generic message — same whether account is new or already exists
+          // to prevent user enumeration attacks
+          setSuccessMsg('Si cette adresse n\'est pas déjà inscrite, un email de confirmation vous a été envoyé. Vérifiez votre boîte mail (et les spams).');
+        }
+        // If !needsConfirmation, user is auto-logged in via onAuthStateChange
       } else {
         await onResetPassword(email);
-        setSuccessMsg('Un email de réinitialisation vous a été envoyé. Veuillez vérifier votre boîte de réception.');
+        setSuccessMsg('Si un compte existe avec cet email, un lien de réinitialisation a été envoyé. Vérifiez votre boîte mail (et les spams).');
       }
     } catch (err: unknown) {
-      setErrorMsg(err instanceof Error ? err.message : 'Une erreur est survenue');
+      setErrorMsg(formatAuthError(err));
     } finally {
       setIsSubmitting(false);
     }
