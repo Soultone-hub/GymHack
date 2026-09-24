@@ -2,16 +2,18 @@ name: Keep Supabase Alive
 
 on:
   schedule:
-    - cron: '0 8 */3 * *'
+    - cron: '0 8 */2 * *'
   workflow_dispatch:
 
 jobs:
   ping-supabase:
     runs-on: ubuntu-latest
     steps:
-      - name: Query Supabase table
+      - name: Write to Supabase to keep it active
         run: |
-          curl -s -X GET \
-            "${{ secrets.SUPABASE_URL }}/rest/v1/exercices?select=*&limit=1" \
+          curl -s -X POST \
+            "${{ secrets.SUPABASE_URL }}/rest/v1/keepalive_ping" \
             -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
-            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}"
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{}'
