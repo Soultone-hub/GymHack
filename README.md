@@ -1,4 +1,4 @@
-# GymHack 🏋️⚡
+# GymHack
 
 **GymHack** est une application web moderne (PWA) de musculation et de fitness permettant de naviguer parmi **1 324 exercices animés**, de gérer ses favoris et d'exécuter des séances de musculation personnalisées.
 
@@ -6,22 +6,22 @@ L'application utilise **Supabase** comme Backend-as-a-Service (Base de données 
 
 ---
 
-## ✨ Fonctionnalités Principales
+##  Fonctionnalités Principales
 
-- 🏋️ **Catalogue complet de 1 324 exercices** : Filtrage rapide par zone anatomique (dos, poitrine, bras, etc.) et par type d'équipement (haltères, poulie, poids du corps...).
-- 🎬 **Animations GIF & Vignettes HD** : Chaque exercice est accompagné d'une animation GIF interactive hébergée sur Supabase Storage.
-- 🌍 **Support Multilingue (10 langues)** : Instructions d'exécution détaillées disponibles en Français, Anglais, Espagnol, Italien, etc.
-- 🔐 **Authentification Sécurisée** :
+-  **Catalogue complet de 1 324 exercices** : Filtrage rapide par zone anatomique (dos, poitrine, bras, etc.) et par type d'équipement (haltères, poulie, poids du corps...).
+-  **Animations GIF & Vignettes HD** : Chaque exercice est accompagné d'une animation GIF interactive hébergée sur Supabase Storage.
+-  **Support Multilingue (10 langues)** : Instructions d'exécution détaillées disponibles en Français, Anglais, Espagnol, Italien, etc.
+-  **Authentification Sécurisée** :
   - **Google OAuth** (connexion en un clic).
   - **Email / Mot de passe** avec confirmation d'email via **Brevo SMTP**.
   - **Réinitialisation de mot de passe** ("Mot de passe oublié ?").
-- 🛡️ **Protection des données (RLS)** : Les favoris et dossiers de séances sont strictement privés et isolés par utilisateur grâce aux politiques *Row Level Security*.
-- 🔖 **Favoris & Séances** : Marquage d'exercices en favoris et création de routines personnalisées avec réordonnancement.
-- 🎨 **Design Premium** : Interface réactive sombre/claire avec animations fluides (Framer Motion) et icônes **Lucide React**.
+-  **Protection des données (RLS)** : Les favoris et dossiers de séances sont strictement privés et isolés par utilisateur grâce aux politiques *Row Level Security*.
+-  **Favoris & Séances** : Marquage d'exercices en favoris et création de routines personnalisées avec réordonnancement.
+-  **Design Premium** : Interface réactive sombre/claire avec animations fluides (Framer Motion) et icônes **Lucide React**.
 
 ---
 
-## 🛠️ Stack Technique
+##  Stack Technique
 
 - **Frontend** : React 19, Vite, TypeScript, TailwindCSS v4, Framer Motion, Lucide React Icons.
 - **Backend / BDD** : Supabase (PostgreSQL, Supabase Auth, Supabase Storage, RLS).
@@ -30,7 +30,7 @@ L'application utilise **Supabase** comme Backend-as-a-Service (Base de données 
 
 ---
 
-## 🚀 Guide d'Installation & Configuration
+##  Guide d'Installation & Configuration
 
 ### 1. Prérequis
 - **Node.js** (v18+) & `npm`
@@ -94,7 +94,7 @@ L'application sera accessible sur `http://localhost:3000`.
 
 ---
 
-## 📜 Scripts Disponibles
+##  Scripts Disponibles
 
 | Commande | Description |
 |---|---|
@@ -105,7 +105,7 @@ L'application sera accessible sur `http://localhost:3000`.
 
 ---
 
-## 📁 Architecture du Projet
+##  Architecture du Projet
 
 ```text
 GymHack/
@@ -130,6 +130,3 @@ GymHack/
 
 ---
 
-## 📄 Licence
-
-Projet sous licence MIT. Dataset d'exercices & visuels © Gym Visual (utilisés sous licence attribuée).
